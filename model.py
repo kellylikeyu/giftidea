@@ -1,0 +1,159 @@
+"""Models for gift idea app."""
+
+from flask_sqlalchemy import SQLAlchemy
+import os
+
+db = SQLAlchemy()
+
+"""Model definitions"""
+
+class User(db.Model):
+    """User of gift Idea app."""
+
+    __tablename__ = "users"
+
+    user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    email = db.Column(db.String, unique=True, nullable=False)
+    password = db.Column(db.String(10),nullable=False)
+    username = db.Column(db.String(20))
+    gender = db.Column(db.String(10))
+    age = db.Column(db.String(10))
+    hobby = db.Column(db.String(20))
+
+    # questions = a list of Question objects
+    # answers = a list of Answer objects
+    # likes = a list of Liked objects
+
+    def __repr__(self):
+        """User representation when printed."""
+        return f"<User user_id={self.user_id} email={self.email}>"
+
+
+class Gift(db.Model):
+    """Gift idea database."""
+
+    __tablename__ = "gifts"
+
+    gift_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    gift_name = db.Column(db.String, nullable=False)
+    gender = db.Column(db.String, nullable=False)
+    age = db.Column(db.String, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+
+    hobbies = db.relationship("Hobby", secondary="gifts_hobbies", backref="gifts")
+
+    # hobbies = a list of Hobbies objects
+    # answers = a list of Answer objects
+
+    def __repr__(self):
+        return f"<Gift gift_id={self.gift_id} name={self.name}>"
+
+class Hobby(db.Model):
+    """Hobby in gift idea database."""
+
+    __tablename__ = "hobbies"
+
+    hobby_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    hobby_name = db.Column(db.String, nullable=False)
+    # gifts = gifts objects
+
+class GiftHobby(db.Model):
+    """An association table with gift and hobby"""
+
+    __tablename__ = "gifts_hobbies"
+
+    gift_hobby_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    gift_id = db.Column(db.Integer, db.ForeignKey("gifts.gift_id"), nullable=False)
+    hobby_id = db.Column(db.Integer, db.ForeignKey("hobbies.hobby_id"), nullable=False)
+
+    def __repr__(self):
+        return f"<GiftHobby gift_id={self.gift_id} hobby_id={self.hobby_id}>"
+
+
+class Question(db.Model):
+    """User questions."""
+
+    __tablename__ = "questions"
+
+    question_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+    gender = db.Column(db.String, nullable=False)
+    age = db.Column(db.String, nullable=False)
+    price = db.Column(db.Integer, nullable=False)
+    hobby = db.Column(db.String)
+    question_type = db.Column(db.Boolean, nullable=False)
+
+    user = db.relationship("User", backref="questions")
+    # answers = a list of Answer objects
+
+class Answer(db.Model):
+    """User answers."""
+
+    __tablename__ = "answers"
+
+    answer_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    question_id = db.Column(db.Integer, db.ForeignKey("questions.question_id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+    gift_id = db.Column(db.Integer, db.ForeignKey("gifts.gift_id"))
+    
+    question = db.relationship("Question", backref="answers")
+    gift = db.relationship("Gift", backref="answers")
+    user = db.relationship("User", backref="answers")
+    # likes = a list of liked answer objects
+
+class Liked(db.Model):
+    """User liked answers."""
+
+    __tablename__ = "likes"
+
+    liked_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    answer_id = db.Column(db.Integer, db.ForeignKey("answers.answer_id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+    
+    answer = db.relationship("Answer", backref="likes")
+    user = db.relationship("User", backref="likes")
+
+def example_data():
+    """Create example data for the test database."""
+
+    fakeuser1 = User(email="mu@mu.com", password="mu")
+    fakeuser2 = User(email="li@li.com", password="li")
+    fakegift = Gift(gift_name='purse', gender='female', age="young", price=50)
+    fakehobby = Hobby(hobby_name="fashion")
+    fakegifthobby = GiftHobby(gift_id=1, hobby_id=1)
+    fakequestion = Question(user_id=1, gender='male', age='toddler', price=20,question_type=True)
+    fakeanswer = Answer(user_id=2, question_id=1)
+    fakelike = Liked(answer_id=1, user_id=1)
+    
+
+    db.session.add_all([fakeuser1, fakeuser2, fakegift, fakehobby, fakequestion, fakeanswer, fakelike])
+    db.session.commit()
+    db.session.add(fakegifthobby)
+    db.session.commit()
+
+
+def connect_to_db(flask_app, db_uri="postgresql:///giftidea", echo=True):
+    flask_app.config["SQLALCHEMY_DATABASE_URI"] = db_uri
+    flask_app.config["SQLALCHEMY_ECHO"] = echo
+    flask_app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+
+    db.app = flask_app
+    db.init_app(flask_app)
+
+    print("Connected to the db!")
+
+
+# if __name__ == "__main__":
+#     from server import app
+
+#     # Call connect_to_db(app, echo=False) if your program output gets
+#     # too annoying; this will tell SQLAlchemy not to print out every
+#     # query it executes.
+
+#     connect_to_db(app)
+
+if __name__ == "__main__":
+    from flask import Flask
+
+    app = Flask(__name__)
+    connect_to_db(app)
