@@ -1,7 +1,6 @@
 """Models for gift idea app."""
 
 from flask_sqlalchemy import SQLAlchemy
-import os
 
 db = SQLAlchemy()
 
@@ -18,8 +17,8 @@ class User(db.Model):
     username = db.Column(db.String(20))
     gender = db.Column(db.String(10))
     age = db.Column(db.String(10))
-    hobby = db.Column(db.String(20))
 
+    hobbies = db.relationship("Hobby", secondary="users_hobbies", backref="users")
     # questions = a list of Question objects
     # answers = a list of Answer objects
     # likes = a list of Liked objects
@@ -39,10 +38,9 @@ class Gift(db.Model):
     gender = db.Column(db.String, nullable=False)
     age = db.Column(db.String, nullable=False)
     price = db.Column(db.Integer, nullable=False)
-
-    hobbies = db.relationship("Hobby", secondary="gifts_hobbies", backref="gifts")
-
-    # hobbies = a list of Hobbies objects
+    hobby_id = db.Column(db.Integer, db.ForeignKey("hobbies.hobby_id"))
+    
+    hobby = db.relationship("Hobby", backref="gifts")
     # answers = a list of Answer objects
 
     def __repr__(self):
@@ -55,19 +53,18 @@ class Hobby(db.Model):
 
     hobby_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     hobby_name = db.Column(db.String, nullable=False)
-    # gifts = gifts objects
 
-class GiftHobby(db.Model):
+    # gifts = a list of Gift objects
+    # users = users objects
+
+class UserHobby(db.Model):
     """An association table with gift and hobby"""
 
-    __tablename__ = "gifts_hobbies"
+    __tablename__ = "users_hobbies"
 
-    gift_hobby_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    gift_id = db.Column(db.Integer, db.ForeignKey("gifts.gift_id"), nullable=False)
+    user_hobby_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"), nullable=False)
     hobby_id = db.Column(db.Integer, db.ForeignKey("hobbies.hobby_id"), nullable=False)
-
-    def __repr__(self):
-        return f"<GiftHobby gift_id={self.gift_id} hobby_id={self.hobby_id}>"
 
 
 class Question(db.Model):
@@ -118,17 +115,18 @@ def example_data():
 
     fakeuser1 = User(email="mu@mu.com", password="mu")
     fakeuser2 = User(email="li@li.com", password="li")
-    fakegift = Gift(gift_name='purse', gender='female', age="young", price=50)
+    fakegift = Gift(gift_name='purse', gender='female', age="6-18", price=50, hobby_id=1)
     fakehobby = Hobby(hobby_name="fashion")
-    fakegifthobby = GiftHobby(gift_id=1, hobby_id=1)
+    fakeuserhobby1 = UserHobby(user_id=1, hobby_id=1)
+    fakeuserhobby2 = UserHobby(user_id=2, hobby_id=1)
     fakequestion = Question(user_id=1, gender='male', age='toddler', price=20,question_type=True)
     fakeanswer = Answer(user_id=2, question_id=1)
     fakelike = Liked(answer_id=1, user_id=1)
     
 
-    db.session.add_all([fakeuser1, fakeuser2, fakegift, fakehobby, fakequestion, fakeanswer, fakelike])
+    db.session.add_all([fakeuser1, fakeuser2, fakehobby, fakequestion, fakeanswer, fakelike])
     db.session.commit()
-    db.session.add(fakegifthobby)
+    db.session.add_all([fakegift,fakeuserhobby1, fakeuserhobby2])
     db.session.commit()
 
 
@@ -157,3 +155,4 @@ if __name__ == "__main__":
 
     app = Flask(__name__)
     connect_to_db(app)
+    db.create_all()
