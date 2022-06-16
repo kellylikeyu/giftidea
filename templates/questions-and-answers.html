@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="search-result-basic">
+    Want more gift ideas? 
+    <ul>
+        {% for gift in gifts%}
+        <li>{{gift.gift_name}}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+</div>
+
+
+
+{% endblock %}

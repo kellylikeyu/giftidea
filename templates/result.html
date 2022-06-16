@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<div class="search-result-basic">
+    For {{age}} year old {{gender}} with price range {{price}}, we suggest:
+    <ul>
+        {% for gift in gifts%}
+        <li>{{gift.gift_name}}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+
+</div>
+
+
+
+{% endblock %}

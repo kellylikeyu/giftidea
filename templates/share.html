@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="container">
+        <div class="search-criteria">
+        <form action="/share" method="POST">
+            Choose a gender:</br>
+            <input type="radio" name="gender" value="female" id="gender-female">
+            <label for="gender-female">Female</label><br>
+            
+            <input type="radio" name="gender" value="male" id="gender-male">
+            <label for="gender-male">Male</label><br>
+
+            <input type="radio" name="gender" value="either gender" id="gender-either">
+            <label for="gender-either">Either gender</label><br>
+
+            <input type="radio" name="gender" value="couple" id="gender-couple">
+            <label for="gender-couple">Couple</label><br>
+
+
+            Choose age:</br>
+            <input type="radio" name="age" value="0-2" id="age-1">
+            <label for="age-1">0-2</label><br>
+            
+            <input type="radio" name="age" value="2-6" id="age-2">
+            <label for="age-2">2-6</label><br>
+
+            <input type="radio" name="age" value="6-18" id="age-3">
+            <label for="age-3">6-18</label><br>
+
+            <input type="radio" name="age" value="18-40" id="age-4">
+            <label for="age-4">18-40</label><br>
+
+            <input type="radio" name="age" value="40-60" id="age-5">
+            <label for="age-5">40-60</label><br>
+
+            <input type="radio" name="age" value="60-100" id="age-6">
+            <label for="age-6">Over 60</label><br>
+
+            Choose price range:</br>
+            <input type="radio" name="price" value="10" id="price-1">
+            <label for="price-1">Under $10</label><br>
+            
+            <input type="radio" name="price" value="20" id="price-2">
+            <label for="price-2">Under $20</label><br>
+
+            <input type="radio" name="price" value="50" id="price-3">
+            <label for="price-3">Under $50</label><br>
+            
+            <input type="radio" name="price" value="100" id="price-4">
+            <label for="price-4">Under $100</label><br>
+
+            <input type="radio" name="price" value="150" id="price-5">
+            <label for="price-5">Under $150</label><br>
+
+            <input type="radio" name="price" value="200" id="price-6">
+            <label for="price-6">Under $200</label><br>
+            
+            <input type="radio" name="price" value="250" id="price-7">
+            <label for="price-7">Over $200</label><br>
+
+            More specific for your loved ones? Choose by hobby:<br>
+        
+            <input type="checkbox" name="hobby" value="art" id="hobby-art">
+            <label for="hobby-art">Art</label><br>
+    
+            <input type="checkbox" name="hobby" value="craft" id="hobby-craft">
+            <label for="hobby-craft">Craft</label><br>
+    
+            <input type="checkbox" name="hobby" value="creative" id="hobby-creative">
+            <label for="hobby-creative">Creative</label><br>
+    
+            <input type="checkbox" name="hobby" value="fashion" id="hobby-fashion">
+            <label for="hobby-fashion">Fashion</label><br>
+    
+            <input type="checkbox" name="hobby" value="garderning" id="hobby-garderning">
+            <label for="hobby-garderning">Garderning</label><br>
+    
+            <input type="checkbox" name="hobby" value="household" id="hobby-household">
+            <label for="hobby-household">Household</label><br>
+    
+            <input type="checkbox" name="hobby" value="intellectual" id="hobby-intellectual">
+            <label for="hobby-intellectual">Intellectual</label><br>
+    
+            <input type="checkbox" name="hobby" value="music" id="hobby-music">
+            <label for="hobby-music">Music</label><br>
+    
+            <input type="checkbox" name="hobby" value="nature lover" id="hobby-natual">
+            <label for="hobby-natual">Matual lover</label><br>
+    
+            <input type="checkbox" name="hobby" value="outdoor" id="hobby-outdoor">
+            <label for="hobby-outdoor">Outdoor</label><br>
+    
+            <input type="checkbox" name="hobby" value="sport" id="hobby-sport">
+            <label for="hobby-sport">Sport</label><br>
+    
+            <input type="checkbox" name="hobby" value="technology" id="hobby-technology">
+            <label for="hobby-technology">Technology</label><br>
+
+
+            <button class="gift-list" type="submit">Submit</button>
+        </form>
+        </div>
+
+    </div>
+    
+{% endblock %}
+

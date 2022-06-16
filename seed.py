@@ -133,10 +133,10 @@ def load_likes():
     db.session.commit()
 
 
-# load_users()
-# load_hobbies()
-# load_users_hobbies()
-# load_gifts()
-# load_questions()
-# load_answers()
-# load_likes()
+load_users()
+load_hobbies()
+load_users_hobbies()
+load_gifts()
+load_questions()
+load_answers()
+load_likes()

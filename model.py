@@ -44,7 +44,7 @@ class Gift(db.Model):
     # answers = a list of Answer objects
 
     def __repr__(self):
-        return f"<Gift gift_id={self.gift_id} name={self.name}>"
+        return f"<Gift gift_id={self.gift_id} name={self.gift_name}>"
 
 class Hobby(db.Model):
     """Hobby in gift idea database."""
