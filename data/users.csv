@@ -1,5 +1,5 @@
-﻿1,aa@test.com,aa,a,female,18-40,fashion
-2,bb@test.com,bb,b,male,6-18,sport
-3,cc@test.com,cc,c,male,18-40,sport
-4,dd@test.com,dd,d,female,18-40,ourdoor
-5,ee@test.com,ee,e,male,40-60,indoor
+﻿1,aa@test.com,aa,a,,18-40
+2,bb@test.com,bb,b,male,6-18
+3,cc@test.com,cc,c,male,
+4,dd@test.com,dd,d,female,18-40
+5,ee@test.com,ee,e,male,40-60

@@ -56,6 +56,8 @@ class Hobby(db.Model):
 
     # gifts = a list of Gift objects
     # users = users objects
+    def __repr__(self):
+        return f"<Hobby hobby_id={self.hobby_id} hobby_name={self.hobby_name}>"
 
 class UserHobby(db.Model):
     """An association table with gift and hobby"""

@@ -29,14 +29,80 @@ def search_result():
     gender = request.form.get('gender')
     age = request.form.get('age')
     price = int(request.form.get('price'))
-    hobbies = request.form.getlist('hobby')
-
-    gifts = crud.get_gifts(gender, age, price, hobbies)
+    hobby_ids = request.form.getlist('hobby')
+    print('\n'*10, hobby_ids)
+    gifts = crud.get_gifts(gender, age, price, hobby_ids)
 
     return render_template("result.html", gifts=gifts, age=age, gender=gender,price=price)
 
+@app.route('/login', methods=['POST'])
+def login():
+    """ Log user in and get user info. """
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    user = crud.get_user_by_email(email)
+    
+    if not user or user.password != password:
+        flash("The email or password you entered was incorrect.")
+
+    else:
+        # Log in user by storing the user's id in session
+        session['user_email'] = user.email
+        flash('Successfully logged in!')
+
+    return redirect('/')
+
+@app.route('/signup')
+def create_account():
+    """Create new account."""
+
+    return render_template("signup.html")
+
+@app.route('/register', methods=["POST"])
+def register_user():
+    """Create a new user."""    
+    
+    username = request.form.get("username")
+    email = request.form.get("email")
+    password = request.form.get("password")
+    gender = request.form.get('gender')
+    age = request.form.get('age')
+    hobby_ids = request.form.getlist('hobby')
+
+    user = crud.get_user_by_email(email)
+
+    if user:
+        flash("This email is already in use, please try again.")
+    else:
+        new_user = crud.create_user(email, password, username, gender, age, hobby_ids)
+        db.session.add(new_user)
+        db.session.commit()
+        flash("Account successfully created! Please log in.")
+    
+    return redirect('/')
+
+@app.route('/logout')
+def logout():
+    session.pop('user_email', None)
+    
+    return redirect('/')
+
+
+@app.route("/profile")
+def user_profile():
+    email=session['user_email']
+    user = crud.get_user_by_email(email)
+    username = user.username
+    gender = user.gender
+    age = user.age
+    hobbies = crud.get_hobby_name_from_hobby_object(user.hobbies)
+
+    return render_template("profile.html", email=email, username=username, gender=gender, 
+                                            age=age, hobbies=hobbies)
+
 @app.route("/ask")
-def ask():
+def ask_page():
     """View Ask page."""
 
     return render_template("ask.html")
@@ -48,16 +114,38 @@ def ask():
 #     return render_template("ask.html")
 
 @app.route("/post-question", methods=['POST'])
-def answer():
-    """View search result."""
+def ask_info():
+    """Create a new question."""
+
+    logged_in_email = session.get("user_email")
     gender = request.form.get('gender')
     age = request.form.get('age')
     price = int(request.form.get('price'))
-    hobbies = request.form.getlist('hobby')
+    hobby_names = request.form.getlist('hobby')
 
-    
+    if logged_in_email is None:
+        flash("You must log in to rate a movie.")
+    elif not gender or not age or not price or not hobby_names:
+        flash("Please select your requirements.")
+    else:
+        user = crud.get_user_by_email(logged_in_email)
+        question_type = True
+        new_question = crud.create_question(user,gender,age,price,hobby_names,question_type)
+
+        # movie = Movie.get_by_id(movie_id)
+
+        # rating = Rating.create(user, movie, int(rating_score))
+        db.session.add(new_question)
+        db.session.commit()
+
+        flash(f"You post a question!")
+
+
+   
 
     return render_template("questions-and-answers.html", age=age, gender=gender,price=price)
+
+
 # @app.route("/movies")
 # def all_movies():
 #     """View all movies."""
