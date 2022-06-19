@@ -97,9 +97,10 @@ def user_profile():
     gender = user.gender
     age = user.age
     hobbies = crud.get_hobby_name_from_hobby_object(user.hobbies)
+    questions = crud.get_question_by_user(user)
 
     return render_template("profile.html", email=email, username=username, gender=gender, 
-                                            age=age, hobbies=hobbies)
+                                            age=age, hobbies=hobbies,questions=questions)
 
 @app.route("/ask")
 def ask_page():
@@ -114,36 +115,35 @@ def ask_page():
 #     return render_template("ask.html")
 
 @app.route("/post-question", methods=['POST'])
-def ask_info():
+def question_info():
     """Create a new question."""
 
     logged_in_email = session.get("user_email")
     gender = request.form.get('gender')
     age = request.form.get('age')
     price = int(request.form.get('price'))
-    hobby_names = request.form.getlist('hobby')
+    hobby_name = request.form.get('hobby')
 
     if logged_in_email is None:
         flash("You must log in to rate a movie.")
-    elif not gender or not age or not price or not hobby_names:
+    elif not gender or not age or not price or not hobby_name:
         flash("Please select your requirements.")
     else:
         user = crud.get_user_by_email(logged_in_email)
         question_type = True
-        new_question = crud.create_question(user,gender,age,price,hobby_names,question_type)
-
-        # movie = Movie.get_by_id(movie_id)
-
-        # rating = Rating.create(user, movie, int(rating_score))
+        new_question = crud.create_question(user,gender,age,price,hobby_name,question_type)
         db.session.add(new_question)
         db.session.commit()
 
         flash(f"You post a question!")
 
+        questions = crud.get_all_questions()
 
-   
+        for question in questions:
 
-    return render_template("questions-and-answers.html", age=age, gender=gender,price=price)
+            answers = crud.get_answers_by_question(question.question_id)
+
+    return render_template("questions-and-answers.html", questions=questions, answers=answers)
 
 
 # @app.route("/movies")

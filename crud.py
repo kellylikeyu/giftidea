@@ -22,6 +22,10 @@ def create_user(email, password, username, gender, age, hobby_ids):
                 age=age, hobbies=hobbies_objects)
 
     return user
+
+def get_question_by_user(user):
+    """get the questions from user"""
+    return user.questions
     
 def get_hobby_name_from_hobby_object(hobbies):
     """get hobby name list from hobby objects"""
@@ -30,8 +34,17 @@ def get_hobby_name_from_hobby_object(hobbies):
         hobby_names.append(hobby.hobby_name)
     return hobby_names
 
-def create_question(user,gender,age,price,hobby_names,question_type)
+def create_question(user,gender,age,price,hobby_name,question_type):
+    """create a new question"""
+    return Question(user=user,gender=gender,age=age,price=price,hobby=hobby_name,question_type=question_type)
 
+def get_all_questions():
+    """get all questions from question table"""
+    return Question.query.all()
+
+def get_answers_by_question(question_id)
+    """get all answers by question id"""
+    return Answer.query.filter(Answer.question_id==question_id).all()
 
 if __name__ == "__main__":
     from server import app

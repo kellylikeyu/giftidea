@@ -21,6 +21,9 @@
         Account activities<br>
         <p>
             <b>Your ask history</b><br>
+            {% for question in questions %}
+                <span id="user-question">{{ question.gender }} {{ question.age }} {{ question.price }}</span><br>
+            {% endfor %}
 
             <b>Your answer history</b><br>
 
