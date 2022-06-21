@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+
+{% block title %} Results {% endblock %}
+
 {% block body %}
     <div class="container">
         <div class="search-criteria">
@@ -101,6 +104,7 @@
         </form>
         </div>
 
+        <div id="search-results" class="grid"></div>
     </div>
     
 {% endblock %}

@@ -4,24 +4,29 @@
 <div class="search-result-basic">
     Ask and answer
     <ul>
-        {% for question in questions %}
-        <li>{{question.question_id}}. gender: {{question.gender}}, age: {{question.age}}, 
-            price: {{question.price}}, hobby: {{question.hobby}} </li>
-            
-            {% for answer in answers %}
-                {% if }
-
-            {% endfor %}
-          
-            <form action="/answer" method="POST">
+        {% for index in index_list %}
+        <li>{{questions[index].question_id}}. gender: {{questions[index].gender}}, age: {{questions[index].age}}, 
+            price: {{questions[index].price}}, hobby: {{questions[index].hobby}} </li>
+            {% for answerOption in answers[index] %}
+            <p> {{answerOption.gift.gift_name}} || {{answerOption.likes|length}} likes
+                <form action="/like/{{answerOption.answer_id}}" method="POST">
+                    <label for="gift_like">Do you like this answer:</label>
+                    <input type="radio" name="user_like" value="true" id="gift_like"> 
+                    <input type="submit">
+                    </form>
+            </p>
+            {% endfor %} 
+            <form action="/answer/{{questions[index].question_id}}" method="POST">
                 <label for="gift_answer">Your suggestion:</label><br>
-                <input type="text" name="gift_name" id="gift_answer"></br>
+                <input type="text" name="gift_name" id="gift_answer"> 
+                <input type="submit"></br>
+            </form>
         {% endfor %}
     </ul>
 </div>
 
 
-</div>
+
 
 
 

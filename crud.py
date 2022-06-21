@@ -42,9 +42,32 @@ def get_all_questions():
     """get all questions from question table"""
     return Question.query.all()
 
-def get_answers_by_question(question_id)
+def get_answers_by_question(question_id):
     """get all answers by question id"""
     return Answer.query.filter(Answer.question_id==question_id).all()
+
+
+def create_answer(user,gift_name,question_id):
+    """create new answer"""
+    question = Question.query.get(question_id)
+    hobby = Hobby.query.filter(Hobby.hobby_name==question.hobby).first()
+    hobby_id = hobby.hobby_id
+    gift=Gift.query.filter(Gift.gift_name==gift_name).first()
+    if gift == None:
+        new_gift=Gift(gift_name=gift_name,gender=question.gender,age=question.age,
+                      price=int(question.price),hobby_id=hobby_id)
+        db.session.add(new_gift)
+        db.session.commit()
+        gift_id=new_gift.gift_id
+    else:
+        gift_id=gift.gift_id
+
+    return Answer(question_id=question_id,user=user,gift_id=gift_id)
+
+def create_like(user,answer_id):
+    return Liked(user=user,answer_id=answer_id)        
+
+
 
 if __name__ == "__main__":
     from server import app

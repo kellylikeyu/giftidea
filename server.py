@@ -30,7 +30,6 @@ def search_result():
     age = request.form.get('age')
     price = int(request.form.get('price'))
     hobby_ids = request.form.getlist('hobby')
-    print('\n'*10, hobby_ids)
     gifts = crud.get_gifts(gender, age, price, hobby_ids)
 
     return render_template("result.html", gifts=gifts, age=age, gender=gender,price=price)
@@ -49,7 +48,7 @@ def login():
     else:
         # Log in user by storing the user's id in session
         session['user_email'] = user.email
-        flash('Successfully logged in!')
+        flash(f"Welcome back, {user.username}!")
 
     return redirect('/')
 
@@ -108,11 +107,17 @@ def ask_page():
 
     return render_template("ask.html")
 
-# @app.route("/share")
-# def ask():
-#     """View Ask page."""
-
-#     return render_template("ask.html")
+@app.route("/answers")
+def answer_page():
+    """View answer page."""
+    questions = crud.get_all_questions()
+    question_answer_list = []
+    for question in questions:
+        answers = crud.get_answers_by_question(question.question_id)
+        question_answer_list.append(answers)
+    
+    index_list=range(len(questions))
+    return render_template("questions-and-answers.html",questions=questions,answers=question_answer_list,index_list=index_list)
 
 @app.route("/post-question", methods=['POST'])
 def question_info():
@@ -125,7 +130,7 @@ def question_info():
     hobby_name = request.form.get('hobby')
 
     if logged_in_email is None:
-        flash("You must log in to rate a movie.")
+        flash("You must log in to ask a question.")
     elif not gender or not age or not price or not hobby_name:
         flash("Please select your requirements.")
     else:
@@ -138,13 +143,63 @@ def question_info():
         flash(f"You post a question!")
 
         questions = crud.get_all_questions()
-
+        question_answer_list = []
         for question in questions:
-
             answers = crud.get_answers_by_question(question.question_id)
+            question_answer_list.append(answers)
+    
+    index_list=range(len(questions))
+    return render_template("questions-and-answers.html",questions=questions,answers=question_answer_list,index_list=index_list)
 
-    return render_template("questions-and-answers.html", questions=questions, answers=answers)
+@app.route("/answer/<question_id>", methods=['POST'])
+def answer(question_id):
+    """Create a new answer."""
 
+    logged_in_email = session.get("user_email")
+    gift_name = request.form.get('gift_name')
+    
+    if logged_in_email is None:
+        flash("You must log in to answer a question.")
+    elif not gift_name:
+        flash("Please give your answer.")
+    else:
+        user = crud.get_user_by_email(logged_in_email)
+        new_answer = crud.create_answer(user,gift_name,question_id)
+        
+        db.session.add(new_answer)
+        db.session.commit()
+
+        flash(f"You post an answer!")
+
+    return render_template("your_answer.html",answer=new_answer)
+
+@app.route("/like/<answer_id>", methods=['POST'])
+def likes(answer_id):
+    """Create a new like."""
+
+    logged_in_email = session.get("user_email")
+    user_like = request.form.get("user_like")
+
+    if logged_in_email is None:
+        flash("You must log in to like an answer.")
+    elif not user_like:
+        flash("Please like an answer.")
+    else:
+        user = crud.get_user_by_email(logged_in_email)
+        new_like = crud.create_like(user,answer_id)
+        
+        db.session.add(new_like)
+        db.session.commit()
+
+        flash(f"You liked an answer!")
+
+    return render_template("your_like.html",like=new_like)
+
+# @app.route("/share")
+# def ask():
+#     """View Ask page."""
+
+#     return render_template("ask.html")
 
 # @app.route("/movies")
 # def all_movies():

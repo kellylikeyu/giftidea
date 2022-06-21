@@ -13,10 +13,10 @@ class User(db.Model):
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     email = db.Column(db.String, unique=True, nullable=False)
-    password = db.Column(db.String(10),nullable=False)
-    username = db.Column(db.String(20))
-    gender = db.Column(db.String(10))
-    age = db.Column(db.String(10))
+    password = db.Column(db.String,nullable=False)
+    username = db.Column(db.String)
+    gender = db.Column(db.String)
+    age = db.Column(db.String)
 
     hobbies = db.relationship("Hobby", secondary="users_hobbies", backref="users")
     # questions = a list of Question objects
