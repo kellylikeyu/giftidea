@@ -131,8 +131,10 @@ def question_info():
 
     if logged_in_email is None:
         flash("You must log in to ask a question.")
+        return redirect("/")
     elif not gender or not age or not price or not hobby_name:
         flash("Please select your requirements.")
+        return redirect("/")
     else:
         user = crud.get_user_by_email(logged_in_email)
         question_type = True
@@ -143,13 +145,9 @@ def question_info():
         flash(f"You post a question!")
 
         questions = crud.get_all_questions()
-        question_answer_list = []
-        for question in questions:
-            answers = crud.get_answers_by_question(question.question_id)
-            question_answer_list.append(answers)
     
-    index_list=range(len(questions))
-    return render_template("questions-and-answers.html",questions=questions,answers=question_answer_list,index_list=index_list)
+        return render_template("questions-and-answers.html",questions=questions)
+
 
 @app.route("/answer/<question_id>", methods=['POST'])
 def answer(question_id):
@@ -160,8 +158,10 @@ def answer(question_id):
     
     if logged_in_email is None:
         flash("You must log in to answer a question.")
+        return redirect("/")
     elif not gift_name:
         flash("Please give your answer.")
+        return redirect("/")
     else:
         user = crud.get_user_by_email(logged_in_email)
         new_answer = crud.create_answer(user,gift_name,question_id)
@@ -171,7 +171,7 @@ def answer(question_id):
 
         flash(f"You post an answer!")
 
-    return render_template("your_answer.html",answer=new_answer)
+        return render_template("your_answer.html",answer=new_answer)
 
 @app.route("/like/<answer_id>", methods=['POST'])
 def likes(answer_id):
@@ -182,8 +182,10 @@ def likes(answer_id):
 
     if logged_in_email is None:
         flash("You must log in to like an answer.")
+        return redirect("/")
     elif not user_like:
         flash("Please like an answer.")
+        return redirect("/")
     else:
         user = crud.get_user_by_email(logged_in_email)
         new_like = crud.create_like(user,answer_id)
@@ -193,13 +195,41 @@ def likes(answer_id):
 
         flash(f"You liked an answer!")
 
-    return render_template("your_like.html",like=new_like)
+        return render_template("your_like.html",like=new_like)
 
-# @app.route("/share")
-# def ask():
-#     """View Ask page."""
+@app.route("/react")
+def react():
 
-#     return render_template("ask.html")
+    return render_template("questions.html")
+
+@app.route("/add-new-question", methods=['POST'])
+def add_new_question():
+    logged_in_email = session.get("user_email")
+    gender = request.get_json().get('gender')
+    age = request.get_json().get('age')
+    price = int(request.get_json().get('price'))
+    hobby_name = request.get_json().get('hobby')
+
+    if logged_in_email is None:
+        flash("You must log in to ask a question.")
+        return jsonify({"success": False, "message":"You must log in to ask a question."})
+    elif not gender or not age or not price or not hobby_name:
+        flash("Please select your requirements.")
+        return jsonify({"success": False, "message":"Please select your requirements."})
+    else:
+        user = crud.get_user_by_email(logged_in_email)
+        question_type = True
+        new_question = crud.create_question(user,gender,age,price,hobby_name,question_type)
+        db.session.add(new_question)
+        db.session.commit()
+
+        flash(f"You post a question!")
+
+        return jsonify({"success": True, "questionAdded": {"id":new_question.question_id}})
+        
+
+
+
 
 # @app.route("/movies")
 # def all_movies():

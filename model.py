@@ -1,6 +1,7 @@
 """Models for gift idea app."""
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.ext.hybrid import hybrid_property
 
 db = SQLAlchemy()
 
@@ -83,22 +84,38 @@ class Question(db.Model):
     question_type = db.Column(db.Boolean, nullable=False)
 
     user = db.relationship("User", backref="questions")
-    # answers = a list of Answer objects
+    answers = db.relationship("Answer", back_populates="question")
 
+    def to_dict(self):
+        question_dict = {}
+        for answer in self.answers:
+            question_dict["gender"] = self.gender
+            question_dict["age"] = self.age
+            question_dict["price"] = self.price
+            question_dict["hobby"] = self.hobby
+            question_dict["answers"] = {}
+            question_dict["answers"]["gift_name"] = answer.gift.gift_name
+            question_dict["answers"]["num_likes"] = answer.num_likes
+        return question_dict
+            
 class Answer(db.Model):
     """User answers."""
 
     __tablename__ = "answers"
 
     answer_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    question_id = db.Column(db.Integer, db.ForeignKey("questions.question_id"))
-    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
-    gift_id = db.Column(db.Integer, db.ForeignKey("gifts.gift_id"))
+    question_id = db.Column(db.Integer, db.ForeignKey("questions.question_id"),nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"),nullable=False)
+    gift_id = db.Column(db.Integer, db.ForeignKey("gifts.gift_id"),nullable=False)
     
-    question = db.relationship("Question", backref="answers")
+    question = db.relationship("Question", back_populates="answers")
     gift = db.relationship("Gift", backref="answers")
     user = db.relationship("User", backref="answers")
-    # likes = a list of liked answer objects
+    likes = db.relationship("Liked", back_populates="answer")
+
+    @hybrid_property
+    def num_likes(self):
+        return len(self.likes)
 
 class Liked(db.Model):
     """User liked answers."""
@@ -109,7 +126,7 @@ class Liked(db.Model):
     answer_id = db.Column(db.Integer, db.ForeignKey("answers.answer_id"))
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
     
-    answer = db.relationship("Answer", backref="likes")
+    answer = db.relationship("Answer", back_populates="likes")
     user = db.relationship("User", backref="likes")
 
 def example_data():
