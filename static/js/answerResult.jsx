@@ -1,17 +1,5 @@
 'use strict';
 
-function QuestionsAnswers(props) {
-   return (
-    <div className="questions-answers">
-        <h2>Questions</h2>
-        <h3> Gender: {props.gender}, Age: {props.age}, 
-            Price: {props.price}, Hobby: {props.hobby} </h3>
-            <p>User suggestions:</p>
-            <p>{props.answers.gift_name} {props.answers.num_likes} likes</p>
-    </div>
-   );
-}
-
 function AddQuestion(props) {
     const [ gender, setGender ] = React.useState("female");
     const [ age, setAge ] = React.useState("0-2");
@@ -43,7 +31,7 @@ function AddQuestion(props) {
       
     const handleSubmit = e => {
         e.preventDefault();
-        console.log("submited");
+        console.log("submited question");
         fetch("/add-new-question", {
             method: "POST",
             headers: {
@@ -54,7 +42,7 @@ function AddQuestion(props) {
         })
             .then((response) => response.json())
             .then((jsonResponse) => {
-            const questionAdded = jsonResponse.questionAdded.id;
+            const questionAdded = jsonResponse.questionAdded;
             console.log(questionAdded)
             props.addQuestion(questionAdded);
             });
@@ -120,46 +108,86 @@ function AddQuestion(props) {
     )  
 }
 
-
 function AddAnswer(props) {
-   
+    const [ answer, setAnswer ] = React.useState('');
+    const handleSubmit = e => {
+        e.preventDefault();
+        console.log("submited answer");
+        fetch("/add-new-answer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ "answer": answer}),
+        })
+            .then((response) => response.json())
+            .then((jsonResponse) => {
+            const answerAdded = jsonResponse.answerAdded;
+            console.log(answerAdded)
+            props.addAnswer(answerAdded);
+            });
+    };
+    return (
+        <React.Fragment>
+            <p>Add your suggestion</p>
+            <div className="answer">
+                <form onSubmit={handleSubmit}>
+                    <label htmlFor="answerInput">
+                    <input
+                        value={answer}
+                        onChange={(event) => setAnswer(event.target.value)}
+                        id="answerInput"/>
+                    </label>                   
+                    <button type="submit" onSubmit={handleSubmit}>Submit</button>
+                </form>
+            </div>          
+        </React.Fragment>
+    ) 
 }
 
-function AddLikes(props) {
-   
-}
 
 function QuestionAnswerContainer(props) {
-   const [questions, setQuestions] = React.useState([])
-   function addQuestion(newQuestion) {
-    setQuestions([...questions, newQuestion]);
+    const [questions, setQuestions] = React.useState([]);
+    const [answer, setAnswer] = React.useState([]);
+    function addQuestion(newQuestion) {
+        setQuestions([...questions, newQuestion]);
     }
+    function addAnswer(newAnswer) {
+        setAnswer([...answer, newAnswer]);
+        }
     React.useEffect(() => {
         fetch("/all-questions")
           .then((response) => response.json())
           .then((questionsJSON) => setQuestions(questionsJSON.questions));
       }, []);
     
+
+
     return (
         <React.Fragment>
             <AddQuestion addQuestion={addQuestion} />
+
             <h2>Questions</h2>
-            <p>
-                {questions.map((question) =>(
-                    <li>
+
+            {questions.length > 0 && questions.map((question, index) => (
+                    <div key= {index}>
                         Gender: {question.gender}, 
                         Age: {question.age},
-                        price: {queestion.price},
-                        hobby: {question.hobby}.
-                        Answers: {question.answers}.map((answer) =>(
-                            <li>
-                                                            </li>
-                        ))
-                    </li>
-                ))}
-            </p>
+                        price: ${question.price},
+                        hobby: {question.hobby}. <br/>
+                        Answers: {question.answers.length > 0 && question.answers.map((answer, index) =>(
+                          <li key= {index}>
+                            {answer.gift_name}
+                            {answer.num_likes} likes
+                          </li>
+                        ))}
+                        <AddAnswer addAnswer={addAnswer} />
+                    </div>
+                ))
+            }
+
         </React.Fragment>
     );
 }
 
-ReactDOM.render(<AddQuestion />, document.getElementById('ask-question'));
+ReactDOM.render(<QuestionAnswerContainer />, document.getElementById('ask-question'));

@@ -88,14 +88,16 @@ class Question(db.Model):
 
     def to_dict(self):
         question_dict = {}
+        question_dict["gender"] = self.gender
+        question_dict["age"] = self.age
+        question_dict["price"] = self.price
+        question_dict["hobby"] = self.hobby
+        question_dict["answers"] = []
         for answer in self.answers:
-            question_dict["gender"] = self.gender
-            question_dict["age"] = self.age
-            question_dict["price"] = self.price
-            question_dict["hobby"] = self.hobby
-            question_dict["answers"] = {}
-            question_dict["answers"]["gift_name"] = answer.gift.gift_name
-            question_dict["answers"]["num_likes"] = answer.num_likes
+            question_dict["answers"].append({
+                "gift_name": answer.gift.gift_name,
+                "num_likes": answer.num_likes
+            })
         return question_dict
             
 class Answer(db.Model):
