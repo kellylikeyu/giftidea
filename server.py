@@ -111,13 +111,7 @@ def ask_page():
 def answer_page():
     """View answer page."""
     questions = crud.get_all_questions()
-    question_answer_list = []
-    for question in questions:
-        answers = crud.get_answers_by_question(question.question_id)
-        question_answer_list.append(answers)
-    
-    index_list=range(len(questions))
-    return render_template("questions-and-answers.html",questions=questions,answers=question_answer_list,index_list=index_list)
+    return render_template("questions-and-answers.html",questions=questions)
 
 @app.route("/post-question", methods=['POST'])
 def question_info():
@@ -202,7 +196,7 @@ def react():
 
     return render_template("questions.html")
 
-@app.route("/add-new-question", methods=['POST'])
+@app.route("/questions", methods=['POST'])
 def add_new_question():
     logged_in_email = session.get("user_email")
     gender = request.get_json().get('gender')
@@ -227,7 +221,7 @@ def add_new_question():
 
         return jsonify({"success": True, "questionAdded": new_question.to_dict()})
         
-@app.route("/all-questions")
+@app.route("/questions")
 def get_all_questions_answers():
     questions = []
     for question in Question.query.all():
@@ -235,12 +229,45 @@ def get_all_questions_answers():
 
     return jsonify({"success": True, "questions": questions})
 
-@app.route("/add-new-answer", methods=['POST'])
+@app.route("/answers", methods=['POST'])
 def add_new_answer():
+    logged_in_email = session.get("user_email")
+    gift_name = request.get_json().get('answer')
+    question_id = request.get_json().get('questionId')
+    
+    if logged_in_email is None:
+        flash("You must log in to answer a question.")
+        return jsonify({"success": False, "message":"You must log in to answer a question."})
+    elif not gift_name:
+        flash("Please give your suggestion.")
+        return jsonify({"success": False, "message":"Please give your suggestion."})
+    else:
+        user = crud.get_user_by_email(logged_in_email)
+        new_answer = crud.create_answer(user,gift_name,question_id)
 
+        db.session.add(new_answer)
+        db.session.commit()
 
+        flash(f"You post an answer!")
+        return jsonify({"success": True, "answerAdded": new_answer.answer_id})
 
+@app.route("/likes", methods=['POST'])
+def add_new_like():
+    logged_in_email = session.get("user_email")
+    answer_id = request.get_json().get('answerId')
+    
+    if logged_in_email is None:
+        flash("You must log in to like an answer.")
+        return jsonify({"success": False, "message":"You must log in to like an answer."})
+    else:
+        user = crud.get_user_by_email(logged_in_email)
+        new_like = crud.create_like(user,answer_id)
+        
+        db.session.add(new_like)
+        db.session.commit()
 
+        flash(f"You liked an answer!")
+        return jsonify({"success": True, "likeAdded": new_like.answer_id})
 
 if __name__ == "__main__":
     connect_to_db(app)
