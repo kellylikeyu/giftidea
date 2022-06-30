@@ -276,13 +276,14 @@ def add_new_like():
         flash(f"You liked an answer!")
         return jsonify({"success": True, "likeAdded": new_like.answer_id})
 
-API_KEY = os.environ['AMAZON_KEY']
+# API_KEY = os.environ['AMAZON_KEY']
 URL = "https://amazon-products1.p.rapidapi.com/search"
 
 HEADERS = {
 	"X-RapidAPI-Key": "984f9bfe66msh74d4b30163a4b64p1e5502jsnbe8887aadb9b",
 	"X-RapidAPI-Host": "amazon-products1.p.rapidapi.com"
 }
+
 @app.route("/search", methods=['POST'])
 def search():
     # logged_in_email = session.get("user_email")
@@ -291,20 +292,39 @@ def search():
     price = int(request.get_json().get('price'))
     hobby_name = request.get_json().get('hobby')
 
+    print ("\n"*10, gender, age, price, hobby_name)
     querystring = {"country":"US","query":f"gift+{gender}+{age}+year+old+{hobby_name}"}
-
-    response = requests.request("GET", URL, headers=HEADERS, params=querystring)
-    results = response.text.results
+    print ("\n"*10, querystring)
+    response = requests.request("GET", URL, headers=HEADERS, params=querystring).json()
+    results = response['results'] 
+    print ("\n"*10, "response", response)
+    print ("\n"*10, "results", results)
     filter_results = []
 
+    # filter_results = [{
+    #             "id": 1,
+    #             "title": "Learnabee Toys for 2 Year Old Boys/Girls",
+    #             "image" : "https://m.media-amazon.com/images/I/71INgaJBopS._AC_UL320_.jpg",
+    #             "full_link" : "https://www.amazon.com/dp/B0995PKH6Q/?psc=1",
+    #             "price" : 28.99,
+    #         },
+    #         {
+    #              "id": 2,
+    #             "title": "Love&Mini Piano Toy Keyboard for Kids Birthday Gift",
+    #             "image" : "https://m.media-amazon.com/images/I/71GvA+dZluS._AC_UL320_.jpg",
+    #             "full_link" : "https://www.amazon.com/dp/B01IOFPJAS/?psc=1",
+    #             "price" : 25.86,
+    #         }]
+    id=0
     for result in results:
-        if result.prices.current_price <= price:
+        if result["prices"]["current_price"] <= price:
+            id += 1
             filter_results.append({
-                "title": result.title,
-                "image" : result.image,
-                "full_link" : result.full_link,
-                "price" : result.prices.current_price,
-                "reviews" : result.reviews
+                "id": id,
+                "title": result["title"],
+                "image" : result["image"],
+                "full_link" : result["full_link"],
+                "price" : result["prices"]["current_price"]
             })
 
     return jsonify({"success": True, "searchResults": filter_results})
@@ -316,7 +336,9 @@ def search():
     #     return jsonify({"success": False, "message":"Please select your requirements."})
     
         # user = crud.get_user_by_email(logged_in_email)
-        
+
+# @app.route("/search-item", methods=['POST']) 
+# def search_item()      
         
         
         

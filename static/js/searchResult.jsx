@@ -84,25 +84,22 @@ function Search(props) {
           <label>
             Choose price range:
             <select value={criteria.price} name="price" onChange={handleChange}>
-              <option value="10" name="price" id="price-1">
-                Under $10
+              <option value="25" name="price" id="price-1">
+                Under $25
               </option>
-              <option value="20" name="price" id="price-2">
-                Under $20
-              </option>
-              <option value="50" name="price" id="price-3">
+              <option value="50" name="price" id="price-2">
                 Under $50
               </option>
-              <option value="100" name="price" id="price-4">
+              <option value="100" name="price" id="price-3">
                 Under $100
               </option>
-              <option value="150" name="price" id="price-5">
+              <option value="150" name="price" id="price-4">
                 Under $150
               </option>
-              <option value="200" name="price" id="price-6">
+              <option value="200" name="price" id="price-5">
                 Under $200
               </option>
-              <option value="250" name="price" id="price-7">
+              <option value="250" name="price" id="price-6">
                 Over $200
               </option>
             </select>
@@ -155,4 +152,33 @@ function Search(props) {
   );
 }
 
-ReactDOM.render(<Search />, document.getElementById("search_result"));
+function SearchResultsContainer(props) {
+  const [results, setResults] = React.useState([]);
+
+  function addResults(newResults) {
+    setResults(newResults);
+  }
+  console.log("result:", results);
+  return (
+    <React.Fragment>
+      <Search addResults={addResults} />
+      <div>
+        {results.length > 0 &&
+          results.map((result) => (
+            <div key={result.id}>
+              <img src={result.image} alt="profile" />
+              <br />
+              {result.title},<br />
+              <a href={result.full_link}>Purchase link</a>, <br />
+              price: ${result.price}, <br />
+            </div>
+          ))}
+      </div>
+    </React.Fragment>
+  );
+}
+
+ReactDOM.render(
+  <SearchResultsContainer />,
+  document.getElementById("search_result")
+);

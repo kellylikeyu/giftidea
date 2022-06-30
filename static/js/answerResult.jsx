@@ -84,25 +84,22 @@ function AddQuestion(props) {
           <label>
             Choose price range:
             <select value={criteria.price} name="price" onChange={handleChange}>
-              <option value="10" name="price" id="price-1">
-                Under $10
-              </option>
-              <option value="20" name="price" id="price-2">
+              <option value="25" name="price" id="price-1">
                 Under $20
               </option>
-              <option value="50" name="price" id="price-3">
+              <option value="50" name="price" id="price-2">
                 Under $50
               </option>
-              <option value="100" name="price" id="price-4">
+              <option value="100" name="price" id="price-3">
                 Under $100
               </option>
-              <option value="150" name="price" id="price-5">
+              <option value="150" name="price" id="price-4">
                 Under $150
               </option>
-              <option value="200" name="price" id="price-6">
+              <option value="200" name="price" id="price-5">
                 Under $200
               </option>
-              <option value="250" name="price" id="price-7">
+              <option value="250" name="price" id="price-6">
                 Over $200
               </option>
             </select>
@@ -197,6 +194,7 @@ function AddAnswer(props) {
 
 function AddLike(props) {
   const [likes, setLikes] = React.useState(props.initialLikes);
+  const [disabled, setDisabled] = React.useState(false);
   const answerId = props.answerId;
 
   fetch("/likes", {
@@ -216,7 +214,11 @@ function AddLike(props) {
       <i
         className="material-icons"
         type="button"
-        onClick={() => setLikes(likes + 1)}
+        disabled={disabled}
+        onClick={() => {
+          setLikes(likes + 1);
+          setDisabled(true);
+        }}
         style={{ color: "red" }}
       >
         favorite
@@ -262,6 +264,9 @@ function QuestionAnswerContainer(props) {
                     answerId={answer.id}
                     initialLikes={answer.num_likes}
                   />
+                  {/* <Modal /> */}
+                  {/* <SearchItem gift_name={answer.gift_name}/> */}
+                  {/* <link to="/search-item">Shopping</link> */}
                 </li>
               ))}
             <AddAnswer addAnswer={refreshQuestions} questionId={question.id} />
