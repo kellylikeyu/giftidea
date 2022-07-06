@@ -101,6 +101,10 @@ class Question(db.Model):
                 "num_likes": answer.num_likes
             })
         return question_dict
+        
+    def __repr__(self):
+        """User representation when printed."""
+        return f"<Question user_id={self.user_id} gender={self.gender}>"
             
 class Answer(db.Model):
     """User answers."""

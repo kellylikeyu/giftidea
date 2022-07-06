@@ -19,40 +19,20 @@ def homepage():
 
     return render_template("homepage.html")
 
-# @app.route("/search")
-# def search():
-#     """View search page."""
-
-#     return render_template("search.html")
-
-# @app.route("/result", methods=['POST'])
-# def search_result():
-#     """View search result."""
-#     gender = request.form.get('gender')
-#     age = request.form.get('age')
-#     price = int(request.form.get('price'))
-#     hobby_ids = request.form.getlist('hobby')
-#     gifts = crud.get_gifts(gender, age, price, hobby_ids)
-
-#     return render_template("result.html", gifts=gifts, age=age, gender=gender,price=price)
 
 @app.route('/login', methods=['POST'])
 def login():
     """ Log user in and get user info. """
-    email = request.form.get('email')
-    password = request.form.get('password')
-
+    email = request.get_json().get('email')
+    password = request.get_json().get('password')
+   
     user = crud.get_user_by_email(email)
     
     if not user or user.password != password:
-        flash("The email or password you entered was incorrect.")
-
+        return jsonify({"success": False})
     else:
-        # Log in user by storing the user's id in session
         session['user_email'] = user.email
-        flash(f"Welcome back, {user.username}!")
-
-    return redirect('/')
+        return jsonify({"success": True, "user": session['user_email']})
 
 @app.route('/signup')
 def create_account():
@@ -99,106 +79,20 @@ def user_profile():
     age = user.age
     hobbies = crud.get_hobby_name_from_hobby_object(user.hobbies)
     questions = crud.get_question_by_user(user)
+    answers = crud.get_answer_by_user(user)
+    likes = crud.get_like_by_user(user)
 
     return render_template("profile.html", email=email, username=username, gender=gender, 
-                                            age=age, hobbies=hobbies,questions=questions)
-
-# @app.route("/ask")
-# def ask_page():
-#     """View Ask page."""
-
-#     return render_template("ask.html")
-
-# @app.route("/answers")
-# def answer_page():
-#     """View answer page."""
-#     questions = crud.get_all_questions()
-#     return render_template("questions-and-answers.html",questions=questions)
-
-# @app.route("/post-question", methods=['POST'])
-# def question_info():
-#     """Create a new question."""
-
-#     logged_in_email = session.get("user_email")
-#     gender = request.form.get('gender')
-#     age = request.form.get('age')
-#     price = int(request.form.get('price'))
-#     hobby_name = request.form.get('hobby')
-
-#     if logged_in_email is None:
-#         flash("You must log in to ask a question.")
-#         return redirect("/")
-#     elif not gender or not age or not price or not hobby_name:
-#         flash("Please select your requirements.")
-#         return redirect("/")
-#     else:
-#         user = crud.get_user_by_email(logged_in_email)
-#         question_type = True
-#         new_question = crud.create_question(user,gender,age,price,hobby_name,question_type)
-#         db.session.add(new_question)
-#         db.session.commit()
-
-#         flash(f"You post a question!")
-
-#         questions = crud.get_all_questions()
-    
-#         return render_template("questions-and-answers.html",questions=questions)
+                                            age=age, hobbies=hobbies,questions=questions,
+                                            answers=answers, likes=likes)
 
 
-# @app.route("/answer/<question_id>", methods=['POST'])
-# def answer(question_id):
-#     """Create a new answer."""
-
-#     logged_in_email = session.get("user_email")
-#     gift_name = request.form.get('gift_name')
-    
-#     if logged_in_email is None:
-#         flash("You must log in to answer a question.")
-#         return redirect("/")
-#     elif not gift_name:
-#         flash("Please give your answer.")
-#         return redirect("/")
-#     else:
-#         user = crud.get_user_by_email(logged_in_email)
-#         new_answer = crud.create_answer(user,gift_name,question_id)
-        
-#         db.session.add(new_answer)
-#         db.session.commit()
-
-#         flash(f"You post an answer!")
-
-#         return render_template("your_answer.html",answer=new_answer)
-
-# @app.route("/like/<answer_id>", methods=['POST'])
-# def likes(answer_id):
-#     """Create a new like."""
-
-#     logged_in_email = session.get("user_email")
-#     user_like = request.form.get("user_like")
-
-#     if logged_in_email is None:
-#         flash("You must log in to like an answer.")
-#         return redirect("/")
-#     elif not user_like:
-#         flash("Please like an answer.")
-#         return redirect("/")
-#     else:
-#         user = crud.get_user_by_email(logged_in_email)
-#         new_like = crud.create_like(user,answer_id)
-        
-#         db.session.add(new_like)
-#         db.session.commit()
-
-#         flash(f"You liked an answer!")
-
-#         return render_template("your_like.html",like=new_like)
-
-@app.route("/react")
+@app.route("/ask")
 def react():
 
     return render_template("questions.html")
 
-@app.route("/search-react")
+@app.route("/search")
 def search_react():
 
     return render_template("search_results.html")
@@ -212,21 +106,20 @@ def add_new_question():
     hobby_name = request.get_json().get('hobby')
 
     if logged_in_email is None:
-        flash("You must log in to ask a question.")
-        return jsonify({"success": False, "message":"You must log in to ask a question."})
-    elif not gender or not age or not price or not hobby_name:
-        flash("Please select your requirements.")
-        return jsonify({"success": False, "message":"Please select your requirements."})
+       
+        return jsonify({"success": False, "message":"Please log in to ask a question."})
+    
     else:
         user = crud.get_user_by_email(logged_in_email)
         question_type = True
         new_question = crud.create_question(user,gender,age,price,hobby_name,question_type)
-        db.session.add(new_question)
-        db.session.commit()
-        
-        flash(f"You post a question!")
+        status = new_question[1]
+        if status == True:
+            db.session.add(new_question[0])
+            db.session.commit()
 
-        return jsonify({"success": True, "questionAdded": new_question.to_dict()})
+        return jsonify({"success": True, "status": status,
+                        "questionAdded": new_question[0].to_dict()})
         
 @app.route("/questions")
 def get_all_questions_answers():
@@ -243,11 +136,8 @@ def add_new_answer():
     question_id = request.get_json().get('questionId')
     
     if logged_in_email is None:
-        flash("You must log in to answer a question.")
-        return jsonify({"success": False, "message":"You must log in to answer a question."})
-    elif not gift_name:
-        flash("Please give your suggestion.")
-        return jsonify({"success": False, "message":"Please give your suggestion."})
+        return jsonify({"success": False, "message":"Please log in to answer a question."})
+
     else:
         user = crud.get_user_by_email(logged_in_email)
         new_answer = crud.create_answer(user,gift_name,question_id)
@@ -255,7 +145,6 @@ def add_new_answer():
         db.session.add(new_answer)
         db.session.commit()
 
-        flash(f"You post an answer!")
         return jsonify({"success": True, "answerAdded": new_answer.answer_id})
 
 @app.route("/likes", methods=['POST'])
@@ -264,8 +153,8 @@ def add_new_like():
     answer_id = request.get_json().get('answerId')
     
     if logged_in_email is None:
-        flash("You must log in to like an answer.")
-        return jsonify({"success": False, "message":"You must log in to like an answer."})
+        return jsonify({"success": False, "message":"Please log in to like an answer."})
+    
     else:
         user = crud.get_user_by_email(logged_in_email)
         new_like = crud.create_like(user,answer_id)
@@ -273,8 +162,7 @@ def add_new_like():
         db.session.add(new_like)
         db.session.commit()
 
-        flash(f"You liked an answer!")
-        return jsonify({"success": True, "likeAdded": new_like.answer_id})
+        return jsonify({"success": True, "likeNum": new_like.answer.num_likes})
 
 # API_KEY = os.environ['AMAZON_KEY']
 URL = "https://amazon-products1.p.rapidapi.com/search"
@@ -328,22 +216,6 @@ def search():
             })
 
     return jsonify({"success": True, "searchResults": filter_results})
-    # if logged_in_email is None:
-    #     flash("You must log in to ask a question.")
-    #     return jsonify({"success": False, "message":"You must log in to ask a question."})
-    # elif not gender or not age or not price or not hobby_name:
-    #     flash("Please select your requirements.")
-    #     return jsonify({"success": False, "message":"Please select your requirements."})
-    
-        # user = crud.get_user_by_email(logged_in_email)
-
-# @app.route("/search-item", methods=['POST']) 
-# def search_item()      
-        
-        
-        
-
-   
 
 if __name__ == "__main__":
     connect_to_db(app)

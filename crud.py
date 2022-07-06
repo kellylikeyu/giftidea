@@ -26,6 +26,14 @@ def create_user(email, password, username, gender, age, hobby_ids):
 def get_question_by_user(user):
     """get the questions from user"""
     return user.questions
+
+def get_answer_by_user(user):
+    """get the questions from user"""
+    return user.answers
+
+def get_like_by_user(user):
+    """get the questions from user"""
+    return user.likes
     
 def get_hobby_name_from_hobby_object(hobbies):
     """get hobby name list from hobby objects"""
@@ -35,8 +43,16 @@ def get_hobby_name_from_hobby_object(hobbies):
     return hobby_names
 
 def create_question(user,gender,age,price,hobby_name,question_type):
-    """create a new question"""
-    return Question(user=user,gender=gender,age=age,price=price,hobby=hobby_name,question_type=question_type)
+    """create a new question, if the same question exist, return None"""
+    if len(Question.query.filter(Question.gender==gender,Question.age==age,
+                                Question.price==price,Question.hobby==hobby_name,
+                                Question.question_type==question_type).all()) == 0:
+        return [Question(user_id=user.user_id,gender=gender,age=age,price=price,
+                hobby=hobby_name,question_type=question_type), True]
+    else:
+        return [Question.query.filter(Question.gender==gender,Question.age==age,
+                                Question.price==price,Question.hobby==hobby_name,
+                                Question.question_type==question_type).one(), False]
 
 def get_all_questions():
     """get all questions from question table"""

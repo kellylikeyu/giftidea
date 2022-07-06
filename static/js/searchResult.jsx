@@ -163,16 +163,22 @@ function SearchResultsContainer(props) {
     <React.Fragment>
       <Search addResults={addResults} />
       <div>
-        {results.length > 0 &&
-          results.map((result) => (
-            <div key={result.id}>
-              <img src={result.image} alt="profile" />
-              <br />
-              {result.title},<br />
-              <a href={result.full_link}>Purchase link</a>, <br />
-              price: ${result.price}, <br />
+        {results.length > 0 && (
+          <div>
+            <h3> Search Result </h3>
+            <div>
+              {results.map((result) => (
+                <div key={result.id}>
+                  <img src={result.image} alt="profile" />
+                  <br />
+                  {result.title},<br />
+                  <a href={result.full_link}>Purchase link</a>, <br />
+                  price: ${result.price}, <br />
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+        )}
       </div>
     </React.Fragment>
   );
