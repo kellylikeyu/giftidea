@@ -9,3 +9,11 @@
 .full-width {
   width: 100%;
 }
+.carousel-caption {
+  color: darkblue;
+  top: 0;
+  bottom: auto;
+}
+.homepage-image {
+  width: 100%;
+}

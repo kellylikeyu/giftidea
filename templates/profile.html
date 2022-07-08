@@ -25,6 +25,24 @@
       ><br />
       {% endfor %}
     </p>
+    <b>Your answer history</b><br />
+
+    {% for answer in answers %}
+    <span id="user-answer"
+      >Question: {{ answer.question.gender }} {{ answer.question.age }} {{
+      answer.question.price }} {{ answer.question.hobby }}</span
+    ><br />
+    Your answer: {{answer.gift.gift_name}}<br />
+    {% endfor %}
+
+    <b>Your like history</b><br />
+    {% for like in likes %}
+    <span id="user-answer"
+      >Question: {{ like.answer.question.gender }} {{ like.answer.question.age
+      }} {{ like.answer.question.price }} {{ like.answer.question.hobby }}</span
+    ><br />
+    Your liked answer: {{like.answer.gift.gift_name}}<br />
+    {% endfor %}
   </div>
 </div>
 

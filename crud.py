@@ -29,7 +29,7 @@ def get_question_by_user(user):
 
 def get_answer_by_user(user):
     """get the questions from user"""
-    return user.answers
+    return Answer.query.filter(Answer.user_id==user.user_id).all()
 
 def get_like_by_user(user):
     """get the questions from user"""
@@ -81,7 +81,11 @@ def create_answer(user,gift_name,question_id):
     return Answer(question_id=question_id,user=user,gift_id=gift_id)
 
 def create_like(user,answer_id):
-    return Liked(user=user,answer_id=answer_id)        
+    if len(Liked.query.filter(Liked.user_id==user.user_id,Liked.answer_id==answer_id).all()) == 0:
+        return Liked(user=user,answer_id=answer_id)
+    else:
+        return False
+           
 
 
 

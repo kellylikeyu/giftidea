@@ -80,11 +80,11 @@ def user_profile():
     hobbies = crud.get_hobby_name_from_hobby_object(user.hobbies)
     questions = crud.get_question_by_user(user)
     answers = crud.get_answer_by_user(user)
+    print("\n"*10, "questions",questions, "answers", answers, type(answers),type(questions))
     likes = crud.get_like_by_user(user)
 
-    return render_template("profile.html", email=email, username=username, gender=gender, 
-                                            age=age, hobbies=hobbies,questions=questions,
-                                            answers=answers, likes=likes)
+    return render_template("profile.html", email=email, username=username, gender=gender, age=age, 
+                            hobbies=hobbies,questions=questions, answers=answers, likes=likes)
 
 
 @app.route("/ask")
@@ -158,11 +158,15 @@ def add_new_like():
     else:
         user = crud.get_user_by_email(logged_in_email)
         new_like = crud.create_like(user,answer_id)
-        
-        db.session.add(new_like)
-        db.session.commit()
 
-        return jsonify({"success": True, "likeNum": new_like.answer.num_likes})
+        if new_like == False:
+            history = True
+        else:
+            history = False
+            db.session.add(new_like)
+            db.session.commit()
+
+        return jsonify({"success": True, "history": history, "likeNum": new_like.answer.num_likes})
 
 # API_KEY = os.environ['AMAZON_KEY']
 URL = "https://amazon-products1.p.rapidapi.com/search"

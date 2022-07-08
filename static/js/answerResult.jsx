@@ -182,7 +182,9 @@ function AddQuestion(props) {
               </option>
             </select>
           </label>
-          <button type="submit">Ask</button>
+          <ReactBootstrap.Button variant="primary" type="submit">
+            Ask
+          </ReactBootstrap.Button>
         </form>
       </div>
     </React.Fragment>
@@ -212,23 +214,33 @@ function AddAnswer(props) {
 
         const answerAdded = jsonResponse.answerAdded;
         props.addAnswer(answerAdded);
+        setAnswer("");
       });
   };
   return (
     <React.Fragment>
-      <p>Share your suggestion</p>
       <div className="answer">
         <form onSubmit={handleSubmit}>
-          <label htmlFor="answerInput">
-            <input
+          <ReactBootstrap.FloatingLabel
+            controlId="floatingTextarea"
+            label="Your suggestion here"
+            className="mb-3"
+          >
+            <ReactBootstrap.Form.Control
               value={answer}
               onChange={(event) => setAnswer(event.target.value)}
               id="answerInput"
+              as="textarea"
+              placeholder="Leave an answer here"
             />
-          </label>
-          <button type="submit" onSubmit={handleSubmit}>
+          </ReactBootstrap.FloatingLabel>
+          <ReactBootstrap.Button
+            variant="primary"
+            type="submit"
+            onSubmit={handleSubmit}
+          >
             Submit
-          </button>
+          </ReactBootstrap.Button>
         </form>
       </div>
     </React.Fragment>
