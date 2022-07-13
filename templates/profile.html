@@ -1,49 +1,5 @@
 {% extends 'base.html' %} {% block body %}
-<div class="container">
-  <div class="overview">
-    Account information<br />
-    <p>
-      <b>Your username:</b><span id="user-name"> {{ username }}</span><br />
-      <b>Your email:</b><span id="user-email"> {{ email }}</span><br />
-      <b>Your gender:</b><span id="user-gender"> {{ gender }}</span><br />
-      <b>Your age:</b><span id="user-age"> {{ age }}</span><br />
-      <b>Your hobby:</b>
-      {% for hobby in hobbies %}
-      <span id="user-hobby">{{ hobby }}</span>
-      {% endfor %}
-    </p>
-  </div>
-
-  <div class="activities">
-    Account activities<br />
-    <p>
-      <b>Your ask history</b><br />
-      {% for question in questions %}
-      <span id="user-question"
-        >{{ question.gender }} {{ question.age }} {{ question.price }} {{
-        question.hobby }}</span
-      ><br />
-      {% endfor %}
-    </p>
-    <b>Your answer history</b><br />
-
-    {% for answer in answers %}
-    <span id="user-answer"
-      >Question: {{ answer.question.gender }} {{ answer.question.age }} {{
-      answer.question.price }} {{ answer.question.hobby }}</span
-    ><br />
-    Your answer: {{answer.gift.gift_name}}<br />
-    {% endfor %}
-
-    <b>Your like history</b><br />
-    {% for like in likes %}
-    <span id="user-answer"
-      >Question: {{ like.answer.question.gender }} {{ like.answer.question.age
-      }} {{ like.answer.question.price }} {{ like.answer.question.hobby }}</span
-    ><br />
-    Your liked answer: {{like.answer.gift.gift_name}}<br />
-    {% endfor %}
-  </div>
-</div>
-
+<div id="profile"></div>
+{% endblock %} {% block js %}
+<script src="/static/js/profile.jsx" type="text/jsx"></script>
 {% endblock %}

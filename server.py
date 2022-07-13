@@ -32,7 +32,7 @@ def login():
         return jsonify({"success": False})
     else:
         session['user_email'] = user.email
-        return jsonify({"success": True, "user": session['user_email']})
+        return jsonify({"success": True, "user": user.username})
 
 @app.route('/signup')
 def create_account():
@@ -69,23 +69,51 @@ def logout():
     
     return redirect('/')
 
-
 @app.route("/profile")
-def user_profile():
+def profile():
+    return render_template("profile.html")
+
+@app.route("/user")
+def user():     
     email=session['user_email']
     user = crud.get_user_by_email(email)
     username = user.username
     gender = user.gender
     age = user.age
     hobbies = crud.get_hobby_name_from_hobby_object(user.hobbies)
-    questions = crud.get_question_by_user(user)
-    answers = crud.get_answer_by_user(user)
-    print("\n"*10, "questions",questions, "answers", answers, type(answers),type(questions))
-    likes = crud.get_like_by_user(user)
 
-    return render_template("profile.html", email=email, username=username, gender=gender, age=age, 
-                            hobbies=hobbies,questions=questions, answers=answers, likes=likes)
+    questions_object = crud.get_question_by_user(user)
+    questions = []
+    for question in questions_object:
+        questions.append(question.to_dict())
 
+    answers_object = crud.get_answer_by_user(user)
+    answers=[]
+    for answer in answers_object:
+        answers.append({"id": answer.answer_id,
+                        "gender": answer.question.gender,
+                        "age": answer.question.age,
+                        "hobby": answer.question.hobby,
+                        "price": answer.question.price,
+                        "gift": answer.gift.gift_name
+                        })
+    
+    likes_object = crud.get_like_by_user(user)
+    likes=[]
+    for like in likes_object:
+        likes.append({"id": like.liked_id,
+                      "gender":like.answer.question.gender,
+                      "age":like.answer.question.age,
+                      "hobby":like.answer.question.hobby,
+                      "price":like.answer.question.price,
+                      "gift":like.answer.gift.gift_name
+                      })
+
+    return jsonify({"success": True, 
+                    "user":{"username": username, "email": email, "gender": gender, 
+                            "age":age, "hobbies": hobbies, "questions": questions, 
+                            "answers": answers, "likes": likes}})
+   
 
 @app.route("/ask")
 def react():
@@ -132,8 +160,9 @@ def get_all_questions_answers():
 @app.route("/answers", methods=['POST'])
 def add_new_answer():
     logged_in_email = session.get("user_email")
-    gift_name = request.get_json().get('answer')
+    gift_name_input = request.get_json().get('answer')
     question_id = request.get_json().get('questionId')
+    gift_name = gift_name_input.title()
     
     if logged_in_email is None:
         return jsonify({"success": False, "message":"Please log in to answer a question."})
@@ -169,55 +198,68 @@ def add_new_like():
         return jsonify({"success": True, "history": history, "likeNum": new_like.answer.num_likes})
 
 # API_KEY = os.environ['AMAZON_KEY']
-URL = "https://amazon-products1.p.rapidapi.com/search"
+# URL = "https://amazon-products1.p.rapidapi.com/search"
 
-HEADERS = {
-	"X-RapidAPI-Key": "984f9bfe66msh74d4b30163a4b64p1e5502jsnbe8887aadb9b",
-	"X-RapidAPI-Host": "amazon-products1.p.rapidapi.com"
-}
+# HEADERS = {
+# 	"X-RapidAPI-Key": API_KEY,
+# 	"X-RapidAPI-Host": "amazon-products1.p.rapidapi.com"
+# }
 
 @app.route("/search", methods=['POST'])
 def search():
-    # logged_in_email = session.get("user_email")
-    gender = request.get_json().get('gender')
-    age = request.get_json().get('age')
-    price = int(request.get_json().get('price'))
-    hobby_name = request.get_json().get('hobby')
+    filter_results = [{
+                "id": 1,
+                "title": "Learnabee Toys for 2 Year Old Boys/Girls",
+                "image" : "https://m.media-amazon.com/images/I/71INgaJBopS._AC_UL320_.jpg",
+                "full_link" : "https://www.amazon.com/dp/B0995PKH6Q/?psc=1",
+                "price" : 28.99,
+            },
+            {
+                 "id": 2,
+                "title": "Love&Mini Piano Toy Keyboard for Kids Birthday Gift",
+                "image" : "https://m.media-amazon.com/images/I/71GvA+dZluS._AC_UL320_.jpg",
+                "full_link" : "https://www.amazon.com/dp/B01IOFPJAS/?psc=1",
+                "price" : 25.86,
+            },{
+                "id": 3,
+                "title": "Learnabee Toys for 2 Year Old Boys/Girls",
+                "image" : "https://m.media-amazon.com/images/I/71INgaJBopS._AC_UL320_.jpg",
+                "full_link" : "https://www.amazon.com/dp/B0995PKH6Q/?psc=1",
+                "price" : 28.99,
+            },
+            {
+                 "id":4,
+                "title": "Love&Mini Piano Toy Keyboard for Kids Birthday Gift",
+                "image" : "https://m.media-amazon.com/images/I/71GvA+dZluS._AC_UL320_.jpg",
+                "full_link" : "https://www.amazon.com/dp/B01IOFPJAS/?psc=1",
+                "price" : 25.86,
+            }]
+    # gender = request.get_json().get('gender')
+    # age = request.get_json().get('age')
+    # price = int(request.get_json().get('price'))
+    # hobby_name = request.get_json().get('hobby')
 
-    print ("\n"*10, gender, age, price, hobby_name)
-    querystring = {"country":"US","query":f"gift+{gender}+{age}+year+old+{hobby_name}"}
-    print ("\n"*10, querystring)
-    response = requests.request("GET", URL, headers=HEADERS, params=querystring).json()
-    results = response['results'] 
-    print ("\n"*10, "response", response)
-    print ("\n"*10, "results", results)
-    filter_results = []
+    # print ("\n"*10, gender, age, price, hobby_name)
+    # querystring = {"country":"US","query":f"gift+{gender}+{age}+year+old+{hobby_name}"}
+    # print ("\n"*10, querystring)
+    # response = requests.request("GET", URL, headers=HEADERS, params=querystring).json()
+    # results = response['results'] 
+    # print ("\n"*10, "response", response)
+    # print ("\n"*10, "results", results)
+    # filter_results = []
 
-    # filter_results = [{
-    #             "id": 1,
-    #             "title": "Learnabee Toys for 2 Year Old Boys/Girls",
-    #             "image" : "https://m.media-amazon.com/images/I/71INgaJBopS._AC_UL320_.jpg",
-    #             "full_link" : "https://www.amazon.com/dp/B0995PKH6Q/?psc=1",
-    #             "price" : 28.99,
-    #         },
-    #         {
-    #              "id": 2,
-    #             "title": "Love&Mini Piano Toy Keyboard for Kids Birthday Gift",
-    #             "image" : "https://m.media-amazon.com/images/I/71GvA+dZluS._AC_UL320_.jpg",
-    #             "full_link" : "https://www.amazon.com/dp/B01IOFPJAS/?psc=1",
-    #             "price" : 25.86,
-    #         }]
-    id=0
-    for result in results:
-        if result["prices"]["current_price"] <= price:
-            id += 1
-            filter_results.append({
-                "id": id,
-                "title": result["title"],
-                "image" : result["image"],
-                "full_link" : result["full_link"],
-                "price" : result["prices"]["current_price"]
-            })
+ 
+    # id=0
+    # for result in results:
+    #     if result["prices"]["current_price"] <= price:
+    #         id += 1
+    #         filter_results.append({
+    #             "id": id,
+    #             "title": result["title"],
+    #             "image" : result["image"],
+    #             "full_link" : result["full_link"],
+    #             "price" : result["prices"]["current_price"]
+    #         })
 
     return jsonify({"success": True, "searchResults": filter_results})
 

@@ -10,10 +10,151 @@
   width: 100%;
 }
 .carousel-caption {
-  color: darkblue;
+  /* color: #2b2d42; */
+  color: #4c518d;
+  left: 0%;
+  right: 0%;
   top: 0;
-  bottom: auto;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.75),
+    transparent
+  );
 }
-.homepage-image {
+
+#carousel-no-text {
+  top: 50%;
+}
+
+.nav-theme {
+  /* background: linear-gradient(to left, #cca3f5, #fabeaf); */
+  background: linear-gradient(to left, #d66969, #fad478);
+  height: 80px;
+}
+.nav-brand {
+  color: #4c518d;
+}
+
+.nav-link {
+  color: #4713d6;
+}
+
+.justify-content-between {
+  justify-content: space-between;
   width: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.padding {
+  padding: 10px;
+}
+
+#navbar {
+  height: 80px;
+}
+
+.card {
+  width: 20rem;
+  height: 27rem;
+  margin: 50px 30px 50px 30px;
+  border: 1px solid rgba(0, 0, 0, 0.18) !important;
+}
+
+.card:hover {
+  box-shadow: 0 0 11px rgba(33, 33, 33, 0.7);
+}
+footer {
+  margin-top: 50px;
+  text-align: center;
+  padding: 3px;
+  background-color: #eb9478;
+  color: white;
+}
+
+#card-button {
+  background-color: #d66969;
+  border-color: #d66969;
+  width: 80px;
+  height: 40px;
+  position: absolute;
+  bottom: 9%;
+}
+#card-button:hover {
+  background-color: #f08466;
+  border-color: #d66969;
+}
+#button-login-form {
+  background-color: #d66969;
+  border-color: #d66969;
+  width: 80px;
+  height: 38px;
+  position: absolute;
+  left: 5%;
+}
+#button-login-form:hover {
+  background-color: #f08466;
+  border-color: #d66969;
+}
+#link {
+  color: #d66969;
+}
+
+#button-login {
+  background-color: #9299e6;
+  border-color: #d66969;
+
+}
+
+#button-login:hover {
+  background-color: #6577E6;
+  border-color: #6577E6;
+}
+
+#button-carousel {
+  background-color: #d66969;
+  border-color: #d66969;
+}
+
+.navbar-text {
+  width: 300px;
+  display: flex;
+}
+
+#search-button {
+  background-color: #d66969;
+  border-color: #d66969;
+
+}
+
+.figure-img {
+  padding: 15px;
+}
+
+.figure-caption {
+  text-align: center;
+  color: black;
+  font-size: medium;
+  width:300px;
+}
+
+.title-block {
+  margin-left: 50px;
+  margin-right: 50px;
+  margin-top: 50px;
+}
+
+.criteria-block {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  width: 50%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 3fr 3fr 3fr 3fr;
+  grid-gap: 20px;
+  align-items: center;
 }

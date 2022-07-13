@@ -2,12 +2,12 @@ from model import User, Gift, Hobby, UserHobby, Question, Answer, Liked
 from model import connect_to_db, db
 
 
-def get_gifts(gender, age, price, hobby_ids):
-    """get gift list from users' criteria"""
-    hobby_ids_int = list(map(int, hobby_ids))
+# def get_gifts(gender, age, price, hobby_ids):
+#     """get gift list from users' criteria"""
+#     hobby_ids_int = list(map(int, hobby_ids))
 
-    return Gift.query.filter(Gift.gender == gender, Gift.age == age, 
-                            Gift.price == price, Gift.hobby_id.in_(hobby_ids_int)).all()
+#     return Gift.query.filter(Gift.gender == gender, Gift.age == age, 
+#                             Gift.price == price, Gift.hobby_id.in_(hobby_ids_int)).all()
 
 def get_user_by_email(email):
     """Check if user object with this username exists"""
@@ -43,7 +43,7 @@ def get_hobby_name_from_hobby_object(hobbies):
     return hobby_names
 
 def create_question(user,gender,age,price,hobby_name,question_type):
-    """create a new question, if the same question exist, return None"""
+    """create a new question, if the same question exist, return false"""
     if len(Question.query.filter(Question.gender==gender,Question.age==age,
                                 Question.price==price,Question.hobby==hobby_name,
                                 Question.question_type==question_type).all()) == 0:
@@ -75,6 +75,7 @@ def create_answer(user,gift_name,question_id):
         db.session.add(new_gift)
         db.session.commit()
         gift_id=new_gift.gift_id
+        
     else:
         gift_id=gift.gift_id
 

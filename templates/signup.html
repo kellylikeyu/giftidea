@@ -1,83 +1,89 @@
-{% extends 'base.html' %}
-    {% block body %}
-    <div>
-    <h1>Gift Idea</h1>
-    <h2>Create a new account</h2>
-            <form action="/register", method="POST">
-                
-                <label for="username">User name</label>
-                <input type="text" id="username" name="username"><br>
-                
-                <label for="email">Email</label>
-                <input type="text" id="email" name="email"><br>
-                
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password"><br>
-               
-                Choose gender:<br>
-                <input type="radio" name="gender" value="female" id="gender-female"> 
-                <label for="gender-female">Female</label><br>
+{% extends 'base.html' %} {% block body %}
+<div id="signup"></div>
 
-                <input type="radio" name="gender" value="male" id="gender-male">
-                <label for="gender-male">Male</label><br>
+<div>
+  <h1>Gift Idea</h1>
+  <h2>Create a new account</h2>
+  <form action="/register" , method="POST">
+    <label for="username">User name</label>
+    <input type="text" id="username" name="username" /><br />
 
-                <input type="radio" name="gender" value="either gender" id="gender-either">
-                <label for="gender-either">Prefer not to say</label><br>
+    <label for="email">Email</label>
+    <input type="text" id="email" name="email" /><br />
 
-                Choose age:<br>
-                
-                <input type="radio" name="age" value="6-18" id="age-3">
-                <label for="age-3">Under 18</label><br>
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" /><br />
 
-                <input type="radio" name="age" value="18-40" id="age-4">
-                <label for="age-4">18-40</label><br>
+    Choose gender:<br />
+    <input type="radio" name="gender" value="female" id="gender-female" />
+    <label for="gender-female">Female</label><br />
 
-                <input type="radio" name="age" value="40-60" id="age-5">
-                <label for="age-5">40-60</label><br>
+    <input type="radio" name="gender" value="male" id="gender-male" />
+    <label for="gender-male">Male</label><br />
 
-                <input type="radio" name="age" value="60-100" id="age-6">
-                <label for="age-6">Over 60</label><br>
+    <input
+      type="radio"
+      name="gender"
+      value="either gender"
+      id="gender-either"
+    />
+    <label for="gender-either">Prefer not to say</label><br />
 
-                Choose your hobbies:<br>
-                <input type="checkbox" name="hobby" value="1" id="hobby-art">
-                <label for="hobby-art">Art</label><br>
-        
-                <input type="checkbox" name="hobby" value="2" id="hobby-craft">
-                <label for="hobby-craft">Craft</label><br>
-        
-                <input type="checkbox" name="hobby" value="3" id="hobby-creative">
-                <label for="hobby-creative">Creative</label><br>
-        
-                <input type="checkbox" name="hobby" value="4" id="hobby-fashion">
-                <label for="hobby-fashion">Fashion</label><br>
-        
-                <input type="checkbox" name="hobby" value="5" id="hobby-garderning">
-                <label for="hobby-garderning">Garderning</label><br>
-        
-                <input type="checkbox" name="hobby" value="6" id="hobby-household">
-                <label for="hobby-household">Household</label><br>
-        
-                <input type="checkbox" name="hobby" value="7" id="hobby-intellectual">
-                <label for="hobby-intellectual">Intellectual</label><br>
-        
-                <input type="checkbox" name="hobby" value="8" id="hobby-music">
-                <label for="hobby-music">Music</label><br>
-        
-                <input type="checkbox" name="hobby" value="9" id="hobby-natual">
-                <label for="hobby-natual">Matual lover</label><br>
-        
-                <input type="checkbox" name="hobby" value="10" id="hobby-outdoor">
-                <label for="hobby-outdoor">Outdoor</label><br>
-        
-                <input type="checkbox" name="hobby" value="11" id="hobby-sport">
-                <label for="hobby-sport">Sport</label><br>
-        
-                <input type="checkbox" name="hobby" value="12" id="hobby-technology">
-                <label for="hobby-technology">Technology</label><br>
+    Choose age:<br />
 
-                <button class="login-button" type="submit">Submit</button>
-            </form>
+    <input type="radio" name="age" value="6-18" id="age-3" />
+    <label for="age-3">Under 18</label><br />
 
-    </div>
-    
-    {% endblock %}
+    <input type="radio" name="age" value="18-40" id="age-4" />
+    <label for="age-4">18-40</label><br />
+
+    <input type="radio" name="age" value="40-60" id="age-5" />
+    <label for="age-5">40-60</label><br />
+
+    <input type="radio" name="age" value="60-100" id="age-6" />
+    <label for="age-6">Over 60</label><br />
+
+    Choose your hobbies:<br />
+    <input type="checkbox" name="hobby" value="1" id="hobby-art" />
+    <label for="hobby-art">Art</label><br />
+
+    <input type="checkbox" name="hobby" value="2" id="hobby-craft" />
+    <label for="hobby-craft">Craft</label><br />
+
+    <input type="checkbox" name="hobby" value="3" id="hobby-creative" />
+    <label for="hobby-creative">Creative</label><br />
+
+    <input type="checkbox" name="hobby" value="4" id="hobby-fashion" />
+    <label for="hobby-fashion">Fashion</label><br />
+
+    <input type="checkbox" name="hobby" value="5" id="hobby-garderning" />
+    <label for="hobby-garderning">Garderning</label><br />
+
+    <input type="checkbox" name="hobby" value="6" id="hobby-household" />
+    <label for="hobby-household">Household</label><br />
+
+    <input type="checkbox" name="hobby" value="7" id="hobby-intellectual" />
+    <label for="hobby-intellectual">Intellectual</label><br />
+
+    <input type="checkbox" name="hobby" value="8" id="hobby-music" />
+    <label for="hobby-music">Music</label><br />
+
+    <input type="checkbox" name="hobby" value="9" id="hobby-natual" />
+    <label for="hobby-natual">Matual lover</label><br />
+
+    <input type="checkbox" name="hobby" value="10" id="hobby-outdoor" />
+    <label for="hobby-outdoor">Outdoor</label><br />
+
+    <input type="checkbox" name="hobby" value="11" id="hobby-sport" />
+    <label for="hobby-sport">Sport</label><br />
+
+    <input type="checkbox" name="hobby" value="12" id="hobby-technology" />
+    <label for="hobby-technology">Technology</label><br />
+
+    <button class="login-button" type="submit">Submit</button>
+  </form>
+</div>
+
+{% endblock %} {% block js %}
+<script src="/static/js/signup.jsx" type="text/jsx"></script>
+{% endblock %}

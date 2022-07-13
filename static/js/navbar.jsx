@@ -19,15 +19,13 @@ function AlertDismissible(props) {
   }
 }
 
-function Login() {
+function Login(props) {
   const [show, setShow] = React.useState(false);
   const [info, setInfo] = React.useState({
     email: "",
     password: "",
   });
   const [login, setLogin] = React.useState(false);
-  const [passwordPass, setpasswordPass] = React.useState(true);
-
   const handleChange = ({ target }) => {
     const { name, value } = target;
     setInfo((prevInfo) => ({
@@ -37,7 +35,7 @@ function Login() {
   };
 
   const handleLogout = () => {
-    localStorage.clear();
+    sessionStorage.clear();
   };
 
   const handleClose = () => setShow(false);
@@ -55,10 +53,10 @@ function Login() {
         .then((response) => response.json())
         .then((jsonResponse) => {
           if (!jsonResponse.success) {
-            setpasswordPass(false);
+            props.setpasswordPass(false);
             return;
           } else {
-            localStorage.setItem("email", jsonResponse.user);
+            sessionStorage.setItem("username", jsonResponse.user);
             setLogin(true);
           }
         });
@@ -67,22 +65,34 @@ function Login() {
   return (
     <React.Fragment>
       <div className="position-right">
-        {localStorage.getItem("email") ? (
+        {sessionStorage.getItem("username") ? (
           <ReactBootstrap.Navbar.Collapse className="justify-content-end">
-            <ReactBootstrap.Navbar.Text>
-              Logged in as:{" "}
-              <a href="/profile">{localStorage.getItem("email")}</a>
-              <ReactBootstrap.Button
-                variant="primary"
-                href="/logout"
-                onClick={handleLogout}
-              >
-                Log out
-              </ReactBootstrap.Button>
-            </ReactBootstrap.Navbar.Text>
+            <div className="flex">
+              {/* <ReactBootstrap.Navbar.Text> */}
+                <div className="padding">
+                  Logged in as:{" "}
+                  <a href="/profile">{sessionStorage.getItem("username")}</a>
+                </div>
+                <div>
+                  <ReactBootstrap.Button
+                    variant="primary"
+                    href="/logout"
+                    onClick={handleLogout}
+                    id="button-login"
+                  >
+                    Log out
+                  </ReactBootstrap.Button>
+                </div>
+              {/* </ReactBootstrap.Navbar.Text> */}
+            </div>
           </ReactBootstrap.Navbar.Collapse>
         ) : (
-          <ReactBootstrap.Button variant="primary" onClick={handleShow}>
+          <ReactBootstrap.Button
+            variant="primary"
+            onClick={handleShow}
+            className="position-right"
+            id="button-login"
+          >
             Log in
           </ReactBootstrap.Button>
         )}
@@ -127,44 +137,51 @@ function Login() {
               variant="primary"
               type="submit"
               onClick={handleClose}
+              id="button-login-form"
             >
               Log in
             </ReactBootstrap.Button>
-            No account yet? <a href="/signup">Create new account</a>
+            No account yet?{" "}
+            <a href="/signup" id="link">
+              Create new account
+            </a>
           </ReactBootstrap.Modal.Footer>
         </ReactBootstrap.Form>
       </ReactBootstrap.Modal>
-      {!passwordPass && <AlertDismissible />}
     </React.Fragment>
   );
 }
 
 function Navbar(props) {
+  const [passwordPass, setpasswordPass] = React.useState(true);
   return (
     <React.Fragment>
-      <ReactBootstrap.Navbar bg="dark" variant="dark">
+      <ReactBootstrap.Navbar bg="dark" variant="dark" className="nav-theme">
         <ReactBootstrap.Container className="full-width">
-          <ReactBootstrap.Navbar.Brand href="/">
-          <img
-          alt=""
-          src="/static/img/logo.jpg"
-          width="30"
-          height="30"
-          className="d-inline-block align-top"
-        />{' '}
+          <ReactBootstrap.Navbar.Brand href="/" className="nav-brand">
+            <img
+              alt=""
+              src="/static/img/logo.jpg"
+              width="30"
+              height="30"
+              className="d-inline-block align-top"
+            />{" "}
             Gift Idea
           </ReactBootstrap.Navbar.Brand>
-          <ReactBootstrap.Nav className="me-auto">
-            <ReactBootstrap.Nav.Link href="/search">
-              Search
-            </ReactBootstrap.Nav.Link>
-            <ReactBootstrap.Nav.Link href="/ask">
-              Ask and Share
-            </ReactBootstrap.Nav.Link>
 
-            <Login />
+          <ReactBootstrap.Nav className="justify-content-between">
+            <div className="flex">
+              <ReactBootstrap.Nav.Link href="/search" className="nav-link">
+                Search
+              </ReactBootstrap.Nav.Link>
+              <ReactBootstrap.Nav.Link href="/ask" className="nav-link">
+                Ask and Share
+              </ReactBootstrap.Nav.Link>
+            </div>
+            <Login setpasswordPass={setpasswordPass} />
           </ReactBootstrap.Nav>
         </ReactBootstrap.Container>
+        {!passwordPass && <AlertDismissible />}
       </ReactBootstrap.Navbar>
 
       <br />

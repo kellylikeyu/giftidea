@@ -50,10 +50,14 @@
   <div id="navbar"></div>
   <script src="/static/js/navbar.jsx" type="text/jsx"></script>
   <body>
-    {% for msg in get_flashed_messages() %}
-    <p class="flash-msg">{{ msg }}</p>
-    {% endfor %} {% block body %}{% endblock %}
+    {% block body %}{% endblock %}
     <!-- Include any page-specific JavaScript using this block. -->
     {% block js %}{% endblock %} {% block after_body %}{% endblock %}
   </body>
+
+  <footer>
+    <p>Author: Kelly Li<br>
+      © 2022 Copyright <br>
+    <a href="www.giftidea.com">www.giftidea.com</a></p>
+  </footer>
 </html>

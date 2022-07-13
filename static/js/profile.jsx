@@ -1,112 +1,121 @@
 "use strict";
 
-function UserProfile() {
+function Profile() {
+  const [user, setUser] = React.useState("");
 
-  
-    function refreshQuestions() {
-      fetch("/questions")
-        .then((response) => response.json())
-        .then((questionsJSON) => setQuestions(questionsJSON.questions));
-    }
-  
-    React.useEffect(refreshQuestions, []);
-  
-    return (
-      <React.Fragment>
-        <AddQuestion
-          addQuestion={addQuestion}
-          handleShow={handleShow}
-          popQuestion={popQuestion}
-          setShowModal={setShowModal}
-          setHeading={setHeading}
-        />
-  
-        {showModal && (
-          <AlertModal
-            showModal={showModal}
-            heading={heading}
-            handleModalShow={handleModalShow}
-            handleModalClose={handleModalClose}
-          />
-        )}
-  
-        <ReactBootstrap.Modal show={show} onHide={handleClose}>
-          <ReactBootstrap.Modal.Header closeButton>
-            <ReactBootstrap.Modal.Title>
-              {showSuccessfulAdded ? (
-                <p> You post question successfully </p>
-              ) : (
-                <p> This question has been posted </p>
-              )}
-            </ReactBootstrap.Modal.Title>
-          </ReactBootstrap.Modal.Header>
-          <ReactBootstrap.Modal.Body>
-            {showSuccessfulAdded ? (
-              <div>
-                <p>Looking for a gift for your loved one</p>
-                <p> Gender- {newQuestion.gender} </p>
-                <p> Age- {newQuestion.age} </p>
-                <p> Who likes {newQuestion.hobby} </p>
-                <p> Under ${newQuestion.price} </p>
-              </div>
-            ) : (
-              <div>
-                <p>Someone is looking for similar gifts</p>
-                <p> Gender- {newQuestion.gender} </p>
-                <p> Age- {newQuestion.age} </p>
-                <p> Who likes {newQuestion.hobby} </p>
-                <p> Under ${newQuestion.price} </p>
-                <p> Under Question {newQuestion.id}</p>
-                <p> Suggestions we have so far:</p>
-                {newQuestion.answers &&
-                  newQuestion.answers.length > 0 &&
-                  newQuestion.answers.map((answer) => (
-                    <li key={answer.id}>{answer.gift_name}.</li>
-                  ))}
-              </div>
-            )}
-          </ReactBootstrap.Modal.Body>
-          <ReactBootstrap.Modal.Footer>
-            <ReactBootstrap.Button variant="secondary" onClick={handleClose}>
-              Close
-            </ReactBootstrap.Button>
-          </ReactBootstrap.Modal.Footer>
-        </ReactBootstrap.Modal>
-  
-        <h2>Questions</h2>
-  
-        {questions.length > 0 &&
-          questions.map((question) => (
-            <div className="red" key={question.id}>
-              {question.id}. Gender: {question.gender}, Age: {question.age},
-              Price: ${question.price}, Hobby: {question.hobby}. <br />
-              Suggestions:{" "}
-              {question.answers.length > 0 &&
-                question.answers.map((answer) => (
-                  <li key={answer.id}>
-                    {answer.gift_name}.
-                    <AddLike
-                      answerId={answer.id}
-                      initialLikes={answer.num_likes}
-                      setShowModal={setShowModal}
-                      setHeading={setHeading}
-                    />
-                  </li>
+  React.useEffect(() => {
+    fetch("/user")
+      .then((response) => response.json())
+      .then((userJSON) => {
+        console.log(userJSON);
+        setUser(userJSON.user);
+      });
+  }, []);
+  console.log(user.hobbies, typeof user.hobbies);
+
+  return (
+    <React.Fragment>
+      <div class="overview">
+        <h2>Account Information</h2>
+        <ReactBootstrap.ListGroup>
+          <ReactBootstrap.ListGroup.Item>
+            <b>Your username:</b>
+            {user.username}
+          </ReactBootstrap.ListGroup.Item>
+          <ReactBootstrap.ListGroup.Item>
+            <b>Your email:</b>
+            {user.email}
+          </ReactBootstrap.ListGroup.Item>
+          <ReactBootstrap.ListGroup.Item>
+            <b>Your gender:</b>
+            {user.gender}
+          </ReactBootstrap.ListGroup.Item>
+          <ReactBootstrap.ListGroup.Item>
+            <b>Your age:</b>
+            {user.age}
+          </ReactBootstrap.ListGroup.Item>
+          <ReactBootstrap.ListGroup.Item>
+            <b>Your hobby:</b>
+            {user &&
+              user.hobbies.length > 0 &&
+              user.hobbies.map((hobby) => <ul> {hobby}</ul>)}
+          </ReactBootstrap.ListGroup.Item>
+        </ReactBootstrap.ListGroup>
+      </div>
+      <div className="activity">
+        <h2>Account Activities</h2>
+        <ReactBootstrap.Accordion defaultActiveKey={["0"]} alwaysOpen>
+          <ReactBootstrap.Accordion.Item eventKey="0">
+            <ReactBootstrap.Accordion.Header>
+              Your ask history
+            </ReactBootstrap.Accordion.Header>
+            <ReactBootstrap.Accordion.Body>
+              {user &&
+                user.questions.length > 0 &&
+                user.questions.map((question) => (
+                  <div className="activities" key={question.id}>
+                    <ReactBootstrap.ListGroup>
+                      <ReactBootstrap.ListGroup.Item>
+                        <b>Your question:</b>
+                        Gender: {question.gender}, Age: {question.age}, Hobby:{" "}
+                        {question.hobby}, Price: ${question.price}. <br />
+                        <b>Current suggestions:</b>{" "}
+                        {question.answers.length > 0 &&
+                          question.answers.map((answer) => (
+                            <li key={answer.id}>{answer.gift_name}</li>
+                          ))}
+                      </ReactBootstrap.ListGroup.Item>
+                    </ReactBootstrap.ListGroup>
+                  </div>
                 ))}
-              <AddAnswer
-                addAnswer={refreshQuestions}
-                questionId={question.id}
-                setShowModal={setShowModal}
-                setHeading={setHeading}
-              />
-            </div>
-          ))}
-      </React.Fragment>
-    );
-  }
-  
-  ReactDOM.render(
-    <QuestionAnswerContainer />,
-    document.getElementById("ask-question")
+            </ReactBootstrap.Accordion.Body>
+          </ReactBootstrap.Accordion.Item>
+          <ReactBootstrap.Accordion.Item eventKey="1">
+            <ReactBootstrap.Accordion.Header>
+              Your answer history
+            </ReactBootstrap.Accordion.Header>
+            <ReactBootstrap.Accordion.Body>
+              {user &&
+                user.answers.length > 0 &&
+                user.answers.map((answer) => (
+                  <div className="activities" key={answer.id}>
+                    <ReactBootstrap.ListGroup>
+                      <ReactBootstrap.ListGroup.Item>
+                        <b>Question:</b>
+                        Gender: {answer.gender}, Age: {answer.age}, Hobby:{" "}
+                        {answer.hobby}, Price: ${answer.price}. <br />
+                        <b>Your answer:</b> {answer.gift}
+                      </ReactBootstrap.ListGroup.Item>
+                    </ReactBootstrap.ListGroup>
+                  </div>
+                ))}
+            </ReactBootstrap.Accordion.Body>
+          </ReactBootstrap.Accordion.Item>
+          <ReactBootstrap.Accordion.Item eventKey="2">
+            <ReactBootstrap.Accordion.Header>
+              Your like history
+            </ReactBootstrap.Accordion.Header>
+            <ReactBootstrap.Accordion.Body>
+              {user &&
+                user.likes.length > 0 &&
+                user.likes.map((like) => (
+                  <div className="activities" key={like.id}>
+                    <ReactBootstrap.ListGroup>
+                      <ReactBootstrap.ListGroup.Item>
+                        <b>Question:</b>
+                        Gender: {like.gender}, Age: {like.age}, Hobby:{" "}
+                        {like.hobby}, Price: ${like.price}. <br />
+                        <b>Your liked answer:</b> {like.gift}
+                      </ReactBootstrap.ListGroup.Item>
+                    </ReactBootstrap.ListGroup>
+                  </div>
+                ))}
+            </ReactBootstrap.Accordion.Body>
+          </ReactBootstrap.Accordion.Item>
+        </ReactBootstrap.Accordion>
+      </div>
+    </React.Fragment>
   );
-  
+}
+
+ReactDOM.render(<Profile />, document.getElementById("profile"));
