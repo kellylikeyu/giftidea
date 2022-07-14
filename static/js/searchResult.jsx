@@ -114,7 +114,7 @@ function Search(props) {
           disabled={isLoading}
           onClick={!isLoading ? handleSubmitClick : null}
           type="submit"
-          id="search-button"
+          id="submit-button"
         >
           {isLoading ? "Loading…" : "Search"}
         </ReactBootstrap.Button>
@@ -134,7 +134,7 @@ function SearchResultsContainer(props) {
     <React.Fragment>
       <Search addResults={addResults} />
       {results.length == 0 && (
-        <div className="title-block">
+        <div className="search-block">
           <h2>Recommanded Gift Ideas</h2>
           <div>
             <ReactBootstrap.Figure>

@@ -1,3 +1,4 @@
+from sqlalchemy import false
 from model import User, Gift, Hobby, UserHobby, Question, Answer, Liked
 from model import connect_to_db, db
 
@@ -32,9 +33,17 @@ def get_answer_by_user(user):
     return Answer.query.filter(Answer.user_id==user.user_id).all()
 
 def get_like_by_user(user):
-    """get the questions from user"""
+    """get the likes from user"""
     return user.likes
     
+def get_likeinfo_by_user_answer(user,answer_id):
+    history = Liked.query.filter(Liked.user_id==user.user_id,Liked.answer_id==answer_id).all()
+    if len(history) == 0:
+        return False
+    else:
+        return True
+
+
 def get_hobby_name_from_hobby_object(hobbies):
     """get hobby name list from hobby objects"""
     hobby_names = []

@@ -15,34 +15,34 @@ function Profile() {
 
   return (
     <React.Fragment>
-      <div class="overview">
+      <div class="title-block">
         <h2>Account Information</h2>
         <ReactBootstrap.ListGroup>
           <ReactBootstrap.ListGroup.Item>
-            <b>Your username:</b>
+            <b>Your username: </b>
             {user.username}
           </ReactBootstrap.ListGroup.Item>
           <ReactBootstrap.ListGroup.Item>
-            <b>Your email:</b>
+            <b>Your email: </b>
             {user.email}
           </ReactBootstrap.ListGroup.Item>
           <ReactBootstrap.ListGroup.Item>
-            <b>Your gender:</b>
+            <b>Your gender: </b>
             {user.gender}
           </ReactBootstrap.ListGroup.Item>
           <ReactBootstrap.ListGroup.Item>
-            <b>Your age:</b>
+            <b>Your age: </b>
             {user.age}
           </ReactBootstrap.ListGroup.Item>
           <ReactBootstrap.ListGroup.Item>
-            <b>Your hobby:</b>
+            <b>Your hobby: </b>
             {user &&
               user.hobbies.length > 0 &&
-              user.hobbies.map((hobby) => <ul> {hobby}</ul>)}
+              user.hobbies.map((hobby) => <span> {hobby}</span>)}
           </ReactBootstrap.ListGroup.Item>
         </ReactBootstrap.ListGroup>
       </div>
-      <div className="activity">
+      <div className="title-block">
         <h2>Account Activities</h2>
         <ReactBootstrap.Accordion defaultActiveKey={["0"]} alwaysOpen>
           <ReactBootstrap.Accordion.Item eventKey="0">

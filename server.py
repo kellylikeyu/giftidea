@@ -189,13 +189,26 @@ def add_new_like():
         new_like = crud.create_like(user,answer_id)
 
         if new_like == False:
-            history = True
+            return jsonify({"success": True, "history": True})
         else:
-            history = False
             db.session.add(new_like)
             db.session.commit()
 
-        return jsonify({"success": True, "history": history, "likeNum": new_like.answer.num_likes})
+            return jsonify({"success": True, "likeNum": new_like.answer.num_likes})
+
+@app.route("/likes", methods=['GET'])
+def like():
+    logged_in_email = session.get("user_email")
+    answer_id = request.args.get('answerId')
+    print("\n"*10,logged_in_email, answer_id)
+    if logged_in_email is None:
+        return jsonify({"success": False})
+    
+    else:
+        user = crud.get_user_by_email(logged_in_email)
+        like_info = crud.get_likeinfo_by_user_answer(user,answer_id)
+
+        return jsonify({"success": True, "history": like_info})
 
 # API_KEY = os.environ['AMAZON_KEY']
 # URL = "https://amazon-products1.p.rapidapi.com/search"
@@ -239,16 +252,11 @@ def search():
     # price = int(request.get_json().get('price'))
     # hobby_name = request.get_json().get('hobby')
 
-    # print ("\n"*10, gender, age, price, hobby_name)
     # querystring = {"country":"US","query":f"gift+{gender}+{age}+year+old+{hobby_name}"}
-    # print ("\n"*10, querystring)
     # response = requests.request("GET", URL, headers=HEADERS, params=querystring).json()
     # results = response['results'] 
-    # print ("\n"*10, "response", response)
-    # print ("\n"*10, "results", results)
     # filter_results = []
 
- 
     # id=0
     # for result in results:
     #     if result["prices"]["current_price"] <= price:
