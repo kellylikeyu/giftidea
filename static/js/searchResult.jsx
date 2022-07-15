@@ -43,7 +43,7 @@ function Search(props) {
   return (
     <React.Fragment>
       <div className="title-block">
-        <h2>Search a gift</h2>
+        <h2>Search a Gift</h2>
         <div className="criteria-block">
           <ReactBootstrap.Form.Control
             as="select"

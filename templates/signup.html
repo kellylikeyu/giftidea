@@ -1,24 +1,29 @@
 {% extends 'base.html' %} {% block body %}
-<div id="signup"></div>
 
-<div>
-  <h1>Gift Idea</h1>
-  <h2>Create a new account</h2>
-  <form action="/register" , method="POST">
-    <label for="username">User name</label>
-    <input type="text" id="username" name="username" /><br />
-
+<div class="wrapper" style="background-image: url('/static/img/bg-registration.jpg');">
+  <div class="inner">
+  <form action="/register" , method="POST" class="sign-up-form">
+    <h3>Create a new account</h3>
+ 
+    <div class="form-wrapper">
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" class="signup-form-control"/><br />
+    </div>
+    <div class="form-wrapper">
     <label for="email">Email</label>
-    <input type="text" id="email" name="email" /><br />
-
+    <input type="text" id="email" name="email" class="signup-form-control"/><br />
+    </div>
+    <div class="form-wrapper">
     <label for="password">Password</label>
-    <input type="password" id="password" name="password" /><br />
-
-    Choose gender:<br />
-    <input type="radio" name="gender" value="female" id="gender-female" />
+    <input type="password" id="password" name="password" class="signup-form-control"/><br />
+   
+  </div>
+    <div class="radiobutton">
+    <b>Choose your gender:</b><br />
+    <input type="radio" name="gender" value="female" id="gender-female" class="regular-radio" />
     <label for="gender-female">Female</label><br />
 
-    <input type="radio" name="gender" value="male" id="gender-male" />
+    <input type="radio" name="gender" value="male" id="gender-male" class="regular-radio" />
     <label for="gender-male">Male</label><br />
 
     <input
@@ -26,24 +31,28 @@
       name="gender"
       value="either gender"
       id="gender-either"
+      class="regular-radio"
     />
     <label for="gender-either">Prefer not to say</label><br />
+    </div>
 
-    Choose age:<br />
+    <div class="radiobutton">
+    <b>Choose your age:</b><br />
 
-    <input type="radio" name="age" value="6-18" id="age-3" />
+    <input type="radio" name="age" value="6-18" id="age-3" class="regular-radio"/>
     <label for="age-3">Under 18</label><br />
 
-    <input type="radio" name="age" value="18-40" id="age-4" />
+    <input type="radio" name="age" value="18-40" id="age-4" class="regular-radio"/>
     <label for="age-4">18-40</label><br />
 
-    <input type="radio" name="age" value="40-60" id="age-5" />
+    <input type="radio" name="age" value="40-60" id="age-5" class="regular-radio"/>
     <label for="age-5">40-60</label><br />
 
-    <input type="radio" name="age" value="60-100" id="age-6" />
+    <input type="radio" name="age" value="60-100" id="age-6" class="regular-radio"/>
     <label for="age-6">Over 60</label><br />
-
-    Choose your hobbies:<br />
+  </div>
+  <div class="radiobutton">
+    <b>Choose your hobbies:</b><br />
     <input type="checkbox" name="hobby" value="1" id="hobby-art" />
     <label for="hobby-art">Art</label><br />
 
@@ -69,7 +78,7 @@
     <label for="hobby-music">Music</label><br />
 
     <input type="checkbox" name="hobby" value="9" id="hobby-natual" />
-    <label for="hobby-natual">Matual lover</label><br />
+    <label for="hobby-natual">Natual lover</label><br />
 
     <input type="checkbox" name="hobby" value="10" id="hobby-outdoor" />
     <label for="hobby-outdoor">Outdoor</label><br />
@@ -79,11 +88,11 @@
 
     <input type="checkbox" name="hobby" value="12" id="hobby-technology" />
     <label for="hobby-technology">Technology</label><br />
-
-    <button class="login-button" type="submit">Submit</button>
+</div>
+    <button class="signup-button" type="submit">Create My Account</button>
   </form>
+  </div>
+</div>
 </div>
 
-{% endblock %} {% block js %}
-<script src="/static/js/signup.jsx" type="text/jsx"></script>
-{% endblock %}
+{% endblock %} 

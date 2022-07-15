@@ -200,7 +200,6 @@ def add_new_like():
 def like():
     logged_in_email = session.get("user_email")
     answer_id = request.args.get('answerId')
-    print("\n"*10,logged_in_email, answer_id)
     if logged_in_email is None:
         return jsonify({"success": False})
     
@@ -210,64 +209,64 @@ def like():
 
         return jsonify({"success": True, "history": like_info})
 
-# API_KEY = os.environ['AMAZON_KEY']
-# URL = "https://amazon-products1.p.rapidapi.com/search"
+API_KEY = os.environ['AMAZON_KEY']
+URL = "https://amazon-products1.p.rapidapi.com/search"
 
-# HEADERS = {
-# 	"X-RapidAPI-Key": API_KEY,
-# 	"X-RapidAPI-Host": "amazon-products1.p.rapidapi.com"
-# }
+HEADERS = {
+	"X-RapidAPI-Key": API_KEY,
+	"X-RapidAPI-Host": "amazon-products1.p.rapidapi.com"
+}
 
 @app.route("/search", methods=['POST'])
 def search():
-    filter_results = [{
-                "id": 1,
-                "title": "Learnabee Toys for 2 Year Old Boys/Girls",
-                "image" : "https://m.media-amazon.com/images/I/71INgaJBopS._AC_UL320_.jpg",
-                "full_link" : "https://www.amazon.com/dp/B0995PKH6Q/?psc=1",
-                "price" : 28.99,
-            },
-            {
-                 "id": 2,
-                "title": "Love&Mini Piano Toy Keyboard for Kids Birthday Gift",
-                "image" : "https://m.media-amazon.com/images/I/71GvA+dZluS._AC_UL320_.jpg",
-                "full_link" : "https://www.amazon.com/dp/B01IOFPJAS/?psc=1",
-                "price" : 25.86,
-            },{
-                "id": 3,
-                "title": "Learnabee Toys for 2 Year Old Boys/Girls",
-                "image" : "https://m.media-amazon.com/images/I/71INgaJBopS._AC_UL320_.jpg",
-                "full_link" : "https://www.amazon.com/dp/B0995PKH6Q/?psc=1",
-                "price" : 28.99,
-            },
-            {
-                 "id":4,
-                "title": "Love&Mini Piano Toy Keyboard for Kids Birthday Gift",
-                "image" : "https://m.media-amazon.com/images/I/71GvA+dZluS._AC_UL320_.jpg",
-                "full_link" : "https://www.amazon.com/dp/B01IOFPJAS/?psc=1",
-                "price" : 25.86,
-            }]
-    # gender = request.get_json().get('gender')
-    # age = request.get_json().get('age')
-    # price = int(request.get_json().get('price'))
-    # hobby_name = request.get_json().get('hobby')
+    # filter_results = [{
+    #             "id": 1,
+    #             "title": "Learnabee Toys for 2 Year Old Boys/Girls",
+    #             "image" : "https://m.media-amazon.com/images/I/71INgaJBopS._AC_UL320_.jpg",
+    #             "full_link" : "https://www.amazon.com/dp/B0995PKH6Q/?psc=1",
+    #             "price" : 28.99,
+    #         },
+    #         {
+    #              "id": 2,
+    #             "title": "Love&Mini Piano Toy Keyboard for Kids Birthday Gift",
+    #             "image" : "https://m.media-amazon.com/images/I/71GvA+dZluS._AC_UL320_.jpg",
+    #             "full_link" : "https://www.amazon.com/dp/B01IOFPJAS/?psc=1",
+    #             "price" : 25.86,
+    #         },{
+    #             "id": 3,
+    #             "title": "Learnabee Toys for 2 Year Old Boys/Girls",
+    #             "image" : "https://m.media-amazon.com/images/I/71INgaJBopS._AC_UL320_.jpg",
+    #             "full_link" : "https://www.amazon.com/dp/B0995PKH6Q/?psc=1",
+    #             "price" : 28.99,
+    #         },
+    #         {
+    #              "id":4,
+    #             "title": "Love&Mini Piano Toy Keyboard for Kids Birthday Gift",
+    #             "image" : "https://m.media-amazon.com/images/I/71GvA+dZluS._AC_UL320_.jpg",
+    #             "full_link" : "https://www.amazon.com/dp/B01IOFPJAS/?psc=1",
+    #             "price" : 25.86,
+    #         }]
+    gender = request.get_json().get('gender')
+    age = request.get_json().get('age')
+    price = int(request.get_json().get('price'))
+    hobby_name = request.get_json().get('hobby')
 
-    # querystring = {"country":"US","query":f"gift+{gender}+{age}+year+old+{hobby_name}"}
-    # response = requests.request("GET", URL, headers=HEADERS, params=querystring).json()
-    # results = response['results'] 
-    # filter_results = []
+    querystring = {"country":"US","query":f"gift+{gender}+{age}+year+old+{hobby_name}"}
+    response = requests.request("GET", URL, headers=HEADERS, params=querystring).json()
+    results = response['results'] 
+    filter_results = []
 
-    # id=0
-    # for result in results:
-    #     if result["prices"]["current_price"] <= price:
-    #         id += 1
-    #         filter_results.append({
-    #             "id": id,
-    #             "title": result["title"],
-    #             "image" : result["image"],
-    #             "full_link" : result["full_link"],
-    #             "price" : result["prices"]["current_price"]
-    #         })
+    id=0
+    for result in results:
+        if result["prices"]["current_price"] <= price:
+            id += 1
+            filter_results.append({
+                "id": id,
+                "title": result["title"],
+                "image" : result["image"],
+                "full_link" : result["full_link"],
+                "price" : result["prices"]["current_price"]
+            })
 
     return jsonify({"success": True, "searchResults": filter_results})
 

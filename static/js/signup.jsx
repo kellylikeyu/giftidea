@@ -3,18 +3,25 @@
 function Signup() {
   return (
     <React.Fragment>
+      <div className="title-block">
+      <h2>Create a New Account</h2>
       <ReactBootstrap.Form>
-        <ReactBootstrap.Form.Group
-          className="mb-3"
-          controlId="formHorizontalEmail"
-        >
-          <ReactBootstrap.Form.Label column sm={2}>
-            Email
-          </ReactBootstrap.Form.Label>
-          <ReactBootstrap.Col sm={10}>
-            <ReactBootstrap.Form.Control type="email" placeholder="Email" />
-          </ReactBootstrap.Col>
-        </ReactBootstrap.Form.Group>
+       
+      <ReactBootstrap.Form.Group
+              className="mb-3"
+              controlId="formBasicEmail"
+            >
+              <ReactBootstrap.Form.Label>
+                Email address
+              </ReactBootstrap.Form.Label>
+              <ReactBootstrap.Form.Control
+                type="email"
+                value={info.email}
+                name="email"
+                onChange={handleChange}
+                placeholder="name@example.com"
+              />
+            </ReactBootstrap.Form.Group>
 
         <ReactBootstrap.Form.Group
           className="mb-3"
@@ -72,6 +79,7 @@ function Signup() {
           </ReactBootstrap.Col>
         </ReactBootstrap.Form.Group>
       </ReactBootstrap.Form>
+      </div>
     </React.Fragment>
   );
 }

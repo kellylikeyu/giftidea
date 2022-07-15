@@ -57,7 +57,6 @@ function AddQuestion(props) {
         if (!jsonResponse.success) {
           props.setHeading(jsonResponse.message);
           props.setShowModal(true);
-          console.log("true");
           return;
         }
 
@@ -219,12 +218,10 @@ function AddLike(props) {
   React.useEffect(getLikes, []);
 
   function getLikes() {
-    console.log("success");
     fetch(`/likes?answerId=${answerId}`)
       .then((response) => response.json())
       .then((jsonResponse) => {
         if (jsonResponse.history) {
-          console.log(jsonResponse.history);
           setDisabled(true);
         } else {
           setDisabled(false);
@@ -318,6 +315,7 @@ function QuestionAnswerContainer(props) {
 
   return (
     <React.Fragment>
+      <div className="background-ask">
       <AddQuestion
         addQuestion={addQuestion}
         handleShow={handleShow}
@@ -373,7 +371,7 @@ function QuestionAnswerContainer(props) {
         </ReactBootstrap.Modal.Body>
         <ReactBootstrap.Modal.Footer>
           <ReactBootstrap.Button
-            variant="secondary"
+            variant="primary"
             onClick={handleClose}
             id="submit-button"
           >
@@ -419,6 +417,7 @@ function QuestionAnswerContainer(props) {
               </div>
             ))}
         </div>
+      </div>
       </div>
     </React.Fragment>
   );
