@@ -1,1 +1,0 @@
-export AMAZON_KEY="984f9bfe66msh74d4b30163a4b64p1e5502jsnbe8887aadb9b"
