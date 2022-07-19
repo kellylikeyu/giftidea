@@ -139,9 +139,9 @@ function SearchResultsContainer(props) {
           <div>
             <ReactBootstrap.Figure>
               <ReactBootstrap.Figure.Image
-                width={304}
-                height={320}
-                alt="304x320"
+                width={342}
+                height={360}
+                alt="342x360"
                 src="https://images.uncommongoods.com/images/items/22200/22272_2_360px.webp"
               />
               <ReactBootstrap.Figure.Caption>
@@ -150,9 +150,9 @@ function SearchResultsContainer(props) {
             </ReactBootstrap.Figure>
             <ReactBootstrap.Figure>
               <ReactBootstrap.Figure.Image
-                width={304}
-                height={320}
-                alt="304x320"
+                width={342}
+                height={360}
+                alt="342x360"
                 src="https://images.uncommongoods.com/images/items/43000/43038_1_640px.webp"
               />
               <ReactBootstrap.Figure.Caption>
@@ -161,9 +161,9 @@ function SearchResultsContainer(props) {
             </ReactBootstrap.Figure>
             <ReactBootstrap.Figure>
               <ReactBootstrap.Figure.Image
-                width={304}
-                height={320}
-                alt="304x320"
+                width={342}
+                height={360}
+                alt="342x360"
                 src="https://images.uncommongoods.com/images/items/40100/40120_6_640px.webp"
               />
               <ReactBootstrap.Figure.Caption>
@@ -172,13 +172,24 @@ function SearchResultsContainer(props) {
             </ReactBootstrap.Figure>
             <ReactBootstrap.Figure>
               <ReactBootstrap.Figure.Image
-                width={304}
-                height={320}
-                alt="304x320"
+               width={342}
+               height={360}
+               alt="342x360"
                 src="https://images.uncommongoods.com/images/items/26000/26073_6_640px.webp"
               />
               <ReactBootstrap.Figure.Caption>
                 New York Times Custom Birthday Book
+              </ReactBootstrap.Figure.Caption>
+            </ReactBootstrap.Figure>
+            <ReactBootstrap.Figure>
+              <ReactBootstrap.Figure.Image
+               width={342}
+               height={360}
+               alt="342x360"
+                src="https://images.uncommongoods.com/images/items/49300/49389_2_640px.webp"
+              />
+              <ReactBootstrap.Figure.Caption>
+                Handblown Glass Olive Oil Pourer
               </ReactBootstrap.Figure.Caption>
             </ReactBootstrap.Figure>
           </div>
@@ -193,14 +204,14 @@ function SearchResultsContainer(props) {
                 <div key={result.id}>
                   <ReactBootstrap.Figure>
                     <ReactBootstrap.Figure.Image
-                      width={304}
-                      height={320}
-                      alt="304x320"
+                      width={342}
+                      height={360}
+                      alt="342x360"
                       src={result.image}
                     />
                     <ReactBootstrap.Figure.Caption>
                       {result.title}<br />
-                      <a href={result.full_link}>Purchase link</a> <br />
+                      <a href={result.full_link}>Purchase</a> <br />
                       Price: ${result.price} <br />
                     </ReactBootstrap.Figure.Caption>
                   </ReactBootstrap.Figure>

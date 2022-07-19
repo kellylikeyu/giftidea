@@ -8,7 +8,7 @@ function Banner() {
 
   return (
     <React.Fragment>
-      <ReactBootstrap.Carousel activeIndex={index} onSelect={handleSelect}>
+      <ReactBootstrap.Carousel interval={1500} activeIndex={index} onSelect={handleSelect}>
         <ReactBootstrap.Carousel.Item>
           <img
             className="full-width"
