@@ -12,6 +12,12 @@ app = Flask(__name__)
 app.secret_key = "dev"
 app.jinja_env.undefined = StrictUndefined
 
+ON_HEROKU = os.environ.get('ON_HEROKU')
+if ON_HEROKU:
+# get the heroku port 
+    port = int(os.environ.get("PORT", 42039)) 
+else:
+    port = 5000
 
 @app.route("/")
 def homepage():
@@ -272,4 +278,4 @@ def search():
 
 if __name__ == "__main__":
     connect_to_db(app)
-    app.run(host="0.0.0.0", debug=True)
+    app.run(host="0.0.0.0",port=port)
